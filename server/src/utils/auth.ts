@@ -1,6 +1,6 @@
 import crypto from "crypto";
 
-export const authentication = (password: string) => {
+export const generateHash = (password: string) => {
 	return crypto
 		.createHmac("sha256", [process.env.SALT, password].join(""))
 		.update(process.env.SECRET)
