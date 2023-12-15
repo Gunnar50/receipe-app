@@ -14,7 +14,6 @@ export const loginUser = async (
 			return res.status(400).send({
 				status: 0,
 				message: "Email or Password incorrect.",
-				type: "error",
 			});
 		}
 
@@ -23,7 +22,6 @@ export const loginUser = async (
 			return res.status(403).send({
 				status: 0,
 				message: "Email or Password incorrect.",
-				type: "error",
 			});
 		}
 
@@ -33,7 +31,6 @@ export const loginUser = async (
 			return res.status(403).send({
 				status: 0,
 				message: "Email or Password incorrect.",
-				type: "error",
 			});
 		}
 
@@ -43,19 +40,37 @@ export const loginUser = async (
 		res.cookie("sessionToken", user.sessionToken, {
 			domain: "localhost",
 			path: "/",
+			// expires: new Date(Date.now() + 9999),
 		});
 
 		return res.status(200).send({
 			status: 1,
 			message: "Logged in successfully.",
-			type: "success",
 		});
 	} catch (error) {
 		console.log(error);
 		return res.status(500).send({
 			status: 0,
 			message: "Error: Something went wrong in our end.",
-			type: "error",
+		});
+	}
+};
+
+export const logoutUser = async (
+	req: express.Request,
+	res: express.Response
+) => {
+	try {
+		res.clearCookie("sessionToken");
+		return res.status(200).send({
+			status: 1,
+			message: "Logged out successfully.",
+		});
+	} catch (error) {
+		console.log(error);
+		return res.status(500).send({
+			status: 0,
+			message: "Error: Something went wrong in our end.",
 		});
 	}
 };
@@ -71,7 +86,6 @@ export const signUpUser = async (
 			return res.status(400).send({
 				status: 0,
 				message: "Error: Something is missing.",
-				type: "error",
 			});
 		}
 
@@ -79,7 +93,6 @@ export const signUpUser = async (
 			return res.status(400).send({
 				status: 0,
 				message: "Could not complete the registration. Please try again.",
-				type: "error",
 			});
 		}
 
@@ -94,14 +107,12 @@ export const signUpUser = async (
 		return res.status(200).send({
 			status: 1,
 			message: "User registered successfully.",
-			type: "success",
 		});
 	} catch (error) {
 		console.log(error);
 		return res.status(500).send({
 			status: 0,
 			message: "Error: Something went wrong on our end.",
-			type: "error",
 		});
 	}
 };

@@ -55,7 +55,6 @@ export const updateUser = async (
 			return res.status(400).send({
 				status: 0,
 				message: "Fields cannot be empty.",
-				type: "error",
 			});
 		}
 
@@ -72,14 +71,12 @@ export const updateUser = async (
 			status: 1,
 			message: "User updated successfully.",
 			user,
-			type: "success",
 		});
 	} catch (error) {
 		console.log(error);
 		return res.status(500).send({
 			status: 0,
 			message: "Error: Something went wrong in our end.",
-			type: "error",
 		});
 	}
 };

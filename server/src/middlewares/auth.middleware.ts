@@ -40,7 +40,6 @@ export const isAuthenticated = async (
 		return res.status(500).send({
 			status: 0,
 			message: "Error: Something went wrong in our end.",
-			type: "error",
 		});
 	}
 };
@@ -58,7 +57,6 @@ export const isOwner = async (
 			return res.status(401).send({
 				status: 0,
 				message: "Unauthorized, please login.",
-				type: "error",
 			});
 		}
 
@@ -66,7 +64,6 @@ export const isOwner = async (
 			return res.status(401).send({
 				status: 0,
 				message: "Unauthorized request.",
-				type: "error",
 			});
 		}
 

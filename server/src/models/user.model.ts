@@ -1,14 +1,24 @@
 import mongoose from "mongoose";
+import { UpdateOptions } from "../utils/interfaces";
 
 const UserSchema = new mongoose.Schema({
-	username: { type: String, required: true },
-	email: { type: String, required: true, unique: true },
-	password: { type: String, required: true, select: false },
+	username: { type: String, required: "Username is required" },
+	email: {
+		type: String,
+		required: "Email is required",
+		unique: "Email already exists",
+		match: [/.+\@.+\..+/, "Please fill a valid email address"],
+	},
+	password: { type: String, required: "Password is required" },
 	sessionToken: { type: String, select: false },
-	// votedRecipes: [{ type: mongoose.Schema.Types.ObjectId, ref: "recipes" }],
+	updated: Date,
+	createdAt: { type: Date, default: Date.now },
+	likedRecipes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Recipe" }],
+
+	// image: { type: String, required: "Image is required" },
 });
 
-export const UserModel = mongoose.model("user", UserSchema); // "users" is the name of the collection
+export const UserModel = mongoose.model("User", UserSchema); // "users" is the name of the collection
 
 export const getAllUsers = () => UserModel.find();
 export const getUserByEmail = (email: string) => UserModel.findOne({ email });
@@ -21,11 +31,6 @@ export const createUser = (values: Record<string, any>) =>
 	new UserModel(values).save().then((user) => user.toObject());
 export const deleteUserById = (id: string) =>
 	UserModel.findOneAndDelete({ _id: id });
-
-interface UpdateOptions {
-	new?: boolean;
-	runValidators?: boolean;
-}
 
 export const updateUserById = (
 	id: string,
