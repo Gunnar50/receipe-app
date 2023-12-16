@@ -1,4 +1,5 @@
 import express from "express";
+import { generateHash } from "../utils/auth";
 
 import {
 	deleteUserById,
@@ -15,7 +16,6 @@ export const getUsers = async (req: express.Request, res: express.Response) => {
 		return res.status(500).send({
 			status: 0,
 			message: "Error: Something went wrong in our end.",
-			type: "error",
 		});
 	}
 };
@@ -31,14 +31,12 @@ export const deleteUser = async (
 		return res.status(200).send({
 			status: 1,
 			message: "User deleted successfully.",
-			type: "success",
 		});
 	} catch (error) {
 		console.log(error);
 		return res.status(500).send({
 			status: 0,
 			message: "Error: Something went wrong in our end.",
-			type: "error",
 		});
 	}
 };
@@ -48,24 +46,29 @@ export const updateUser = async (
 	res: express.Response
 ) => {
 	try {
-		const { username, email, password } = req.body;
 		const { id } = req.params;
+		const { username, password } = req.body;
 
-		if (!username || !email || !password) {
+		if (!username || !password) {
 			return res.status(400).send({
 				status: 0,
 				message: "Fields cannot be empty.",
 			});
 		}
 
+		const hasedPassword = generateHash(password);
+
 		const user = await updateUserById(
 			id,
-			{ username, email, password },
+			{ username, password: hasedPassword },
 			{
 				new: true,
 				runValidators: true,
 			}
 		);
+
+		user.updated = new Date();
+		await user.save();
 
 		return res.status(200).send({
 			status: 1,
@@ -76,7 +79,7 @@ export const updateUser = async (
 		console.log(error);
 		return res.status(500).send({
 			status: 0,
-			message: "Error: Something went wrong in our end.",
+			message: "Error: Cannot find user.",
 		});
 	}
 };
