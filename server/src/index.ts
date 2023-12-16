@@ -28,6 +28,7 @@ app.use("/recipes", recipeRouter);
 mongoose.connect(process.env.MONGO_URI);
 mongoose.connection.on("error", (error: Error) => console.log(error));
 
+// Like this set up 👍🏾
 const server = http.createServer(app);
 const port = 6001 || process.env.PORT;
 server.listen(6001, () => {

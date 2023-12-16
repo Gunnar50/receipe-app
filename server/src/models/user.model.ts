@@ -16,9 +16,11 @@ const UserSchema = new mongoose.Schema({
 	likedRecipes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Recipe" }],
 	favRecipes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Recipe" }],
 
+	// if we aren't using this yet, remove it.
 	// image: { type: String, required: "Image is required" },
 });
 
+// Maybe rename to "users" so it matches the collection name. Often you refer to resources in plural anyway
 export const UserModel = mongoose.model("User", UserSchema); // "users" is the name of the collection
 
 export const getAllUsers = () => UserModel.find();

@@ -23,6 +23,11 @@ export const isAuthenticated = async (
 
 		// get an user using the token
 		const user = await getUserBySessionToken(sessionToken);
+		/**
+		 * What you could do instead of getting the user from the session token is decoding the token
+		 * and getting the user by ID. IRL, this is waaaay faster, safer, and better on the DB
+		 * You're using Mongo, so the get by the ID will be faster than the sessionToken.
+		 */
 		if (!user) {
 			return res.status(403).send({
 				status: 0,
@@ -33,6 +38,7 @@ export const isAuthenticated = async (
 
 		// add userId to the request for next function
 		req.userId = user._id.toString();
+		// Same as before. Shouldn't be accessing private prop
 		return next();
 	} catch (error) {
 		console.log(error);
@@ -50,6 +56,8 @@ export const isOwner = async (
 ) => {
 	try {
 		const { id } = req.params;
+		// if you want to use this as a string, cast it to one
+		// const currentUserId = req.userId as string;
 		const currentUserId = req.userId;
 
 		if (!currentUserId) {
@@ -66,6 +74,7 @@ export const isOwner = async (
 			});
 		}
 
+		// Why did you return in the func above and not here? Just curious
 		next();
 	} catch (error) {
 		console.log(error);
