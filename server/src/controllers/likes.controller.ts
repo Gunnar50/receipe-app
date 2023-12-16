@@ -36,8 +36,12 @@ export const likeARecipe = async (
 			message: "Recipe liked successfully",
 			likedRecipes: user.likedRecipes,
 		});
-	} catch (err) {
-		res.json(err);
+	} catch (error) {
+		console.log(error);
+		return res.status(500).send({
+			status: 0,
+			message: "Error: Cannot get user recipe. Please try again later.",
+		});
 	}
 };
 
@@ -78,8 +82,12 @@ export const unlikeARecipe = async (
 			message: "Recipe unliked successfully",
 			likedRecipes: user.likedRecipes,
 		});
-	} catch (err) {
-		res.json(err);
+	} catch (error) {
+		console.log(error);
+		return res.status(500).send({
+			status: 0,
+			message: "Error: Cannot get user recipe. Please try again later.",
+		});
 	}
 };
 
@@ -113,8 +121,12 @@ export const favouriteARecipe = async (
 			message: "Recipe added to favourites successfully",
 			favRecipes: user.favRecipes,
 		});
-	} catch (err) {
-		res.json(err);
+	} catch (error) {
+		console.log(error);
+		return res.status(500).send({
+			status: 0,
+			message: "Error: Cannot get user recipe. Please try again later.",
+		});
 	}
 };
 
@@ -150,7 +162,52 @@ export const unfavouriteARecipe = async (
 			message: "Recipe removed from favourites successfully",
 			favRecipes: user.favRecipes,
 		});
-	} catch (err) {
-		res.json(err);
+	} catch (error) {
+		console.log(error);
+		return res.status(500).send({
+			status: 0,
+			message: "Error: Cannot get user recipe. Please try again later.",
+		});
+	}
+};
+
+export const getFavRecipesByUser = async (
+	req: express.Request,
+	res: express.Response
+) => {
+	try {
+		const { id } = req.params;
+		const { recipeId } = req.body;
+
+		if (!recipeId) {
+			return res.status(400).send({
+				status: 0,
+				message: "Error: Something is missing.",
+			});
+		}
+
+		const user = await getUserById(id);
+		if (!user.favRecipes.includes(recipeId)) {
+			return res.status(400).send({
+				status: 0,
+				message: "Recipe is not in your favourites.",
+			});
+		}
+		user.favRecipes = user.favRecipes.filter(
+			(item) => item.toString() !== recipeId
+		);
+		await user.save();
+
+		res.status(200).send({
+			status: 1,
+			message: "Recipe removed from favourites successfully",
+			favRecipes: user.favRecipes,
+		});
+	} catch (error) {
+		console.log(error);
+		return res.status(500).send({
+			status: 0,
+			message: "Error: Something went wrong.",
+		});
 	}
 };
