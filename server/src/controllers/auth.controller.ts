@@ -92,13 +92,13 @@ export const signUpUser = async (
 		if (await getUserByEmail(email)) {
 			return res.status(400).send({
 				status: 0,
-				message: "Could not complete the registration. Please try again.",
+				message: "Email already registered. Please login.",
 			});
 		}
 
 		const hashedPassword = generateHash(password);
 
-		await createUser({
+		const newUser = await createUser({
 			email,
 			username,
 			password: hashedPassword,
@@ -107,6 +107,7 @@ export const signUpUser = async (
 		return res.status(200).send({
 			status: 1,
 			message: "User registered successfully.",
+			newUser,
 		});
 	} catch (error) {
 		console.log(error);
