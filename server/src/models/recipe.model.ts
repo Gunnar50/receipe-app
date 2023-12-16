@@ -14,21 +14,22 @@ const RecipeSchema = new mongoose.Schema({
 	owner: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "User",
+		require: true,
 	},
 	likes: { type: Number, default: 0 },
-	createddAt: { type: Date, default: Date.now },
+	createdAt: { type: Date, default: Date.now },
 	// comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "comments" }],
 });
 
 export const RecipeModel = mongoose.model("Recipe", RecipeSchema);
 
-export const getAllRecipes = () =>
+export const getRecipes = () =>
 	RecipeModel.find().populate("owner", "username").exec();
 
 export const getRecipeById = (id: string) =>
 	RecipeModel.findById(id).populate("owner", "username").exec();
 
-export const getRecipeByUser = (id: string) =>
+export const getRecipesByUser = (id: string) =>
 	RecipeModel.find({ owner: id }).populate("owner", "username").exec();
 
 export const deleteRecipeById = (id: string) =>
@@ -40,5 +41,5 @@ export const updateRecipeById = (
 	options?: UpdateOptions
 ) => RecipeModel.findByIdAndUpdate(id, values, options);
 
-export const createRecipe = (values: Record<string, any>) =>
+export const createNewRecipe = (values: Record<string, any>) =>
 	new RecipeModel(values).save().then((recipe) => recipe.toObject());
