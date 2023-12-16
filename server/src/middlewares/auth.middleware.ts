@@ -32,7 +32,6 @@ export const isAuthenticated = async (
 		}
 
 		// add userId to the request for next function
-		// merge(req, { userId: user._id });
 		req.userId = user._id.toString();
 		return next();
 	} catch (error) {

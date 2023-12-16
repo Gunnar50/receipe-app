@@ -11,9 +11,10 @@ const UserSchema = new mongoose.Schema({
 	},
 	password: { type: String, required: "Password is required" },
 	sessionToken: { type: String, select: false },
-	updated: Date,
+	updated: { type: Date },
 	createdAt: { type: Date, default: Date.now },
 	likedRecipes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Recipe" }],
+	favRecipes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Recipe" }],
 
 	// image: { type: String, required: "Image is required" },
 });
@@ -37,3 +38,10 @@ export const updateUserById = (
 	values: Record<string, any>,
 	options?: UpdateOptions
 ) => UserModel.findByIdAndUpdate(id, values, options);
+
+export const removeRecipesFromUser = (id: string) => {
+	return UserModel.updateMany(
+		{ $or: [{ likedRecipes: id }, { favRecipes: id }] },
+		{ $pull: { likedRecipes: id, favRecipes: id } }
+	);
+};
