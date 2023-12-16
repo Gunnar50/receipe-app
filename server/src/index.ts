@@ -6,6 +6,7 @@ import express from "express";
 import http from "http";
 import mongoose from "mongoose";
 import authRouter from "./routes/auth.route";
+import recipeRouter from "./routes/recipe.route";
 import usersRouter from "./routes/users.route";
 
 dotenv.config();
@@ -21,6 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 // routes
 app.use("/auth", authRouter);
 app.use("/users", usersRouter);
+app.use("/recipes", recipeRouter);
 
 // mongodb connection
 mongoose.connect(process.env.MONGO_URI);
