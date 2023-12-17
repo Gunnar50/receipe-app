@@ -2,7 +2,6 @@ import express from "express";
 
 import { createUser, getUserByEmail } from "../models/user.model";
 import { generateHash } from "../utils/auth";
-import { HttpStatusCode } from "axios";
 
 /**
  * Don't use arrow functions like this. Regular functions are much better and create a function object with its own
@@ -27,6 +26,8 @@ export const loginUser = async (
 		if (!email || !password) {
 			// prefer built in constants rather than hard coded numbers 
 			// change 400 to HttpStatusCode.BadRequest
+			// Errata - use this https://stackoverflow.com/questions/18765869/accessing-http-status-code-constants#:~:text=Status%20numeric%20value.-,Example%3A%20TypeScript,-Constants.ts
+			// Turns out HttpStatusCode is part of axios which I had installed globally somehow
 			return res.status(400).send({
 				status: 0, // Why are we setting status 0 when we set it on the res object? I think this includes it in the response body
 				message: "Email or Password incorrect.", // if you use Zod, it will handle this for you + you can do custom messages
