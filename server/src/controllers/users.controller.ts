@@ -7,18 +7,22 @@ import {
 	getAllUsers,
 	updateUserById,
 } from "../models/user.model";
+import { tryPromise, formatError, trySync } from "utils/inlineHandlers";
 
-// What's the point of the users controller? Aren't user operations handled by auth?
 export async function getUsers(_: express.Request, res: express.Response) {
-	try {
-		const users = await getAllUsers();
-		return res.status(statusCode.OK).send(users);
-	} catch (error) {
+
+	// Destructuring the returned object (it will always be a result type)
+	const {data, error} = await tryPromise(getAllUsers());
+
+	// if the error exists we handle it here. We return the 500 to the user
+	if (error) {
 		console.log(error);
-		return res.status(statusCode.INTERNAL_SERVER_ERROR).send({
-			message: "Error: Something went wrong in our end.",
-		});
+
+		// error formatter to make things neater
+		return res.status(statusCode.INTERNAL_SERVER_ERROR).send(formatError(error));
 	}
+
+	return res.status(statusCode.OK).send(data);
 }
 
 export async function deleteUser(req: express.Request, res: express.Response) {
@@ -48,11 +52,26 @@ export async function updateUser(req: express.Request, res: express.Response) {
 			});
 		}
 
-		const hasedPassword = generateHash(password);
+		// Little bit of a cheeky hack. Because we take a function object in, we kinda have to use
+		// an arrow function here. Because Arrow functions don't create lexical scope, we don't
+		// need to take in any params to get this to work at all.
+
+		const hasedPasswordResult = trySync<string>(() => generateHash(password));
+
+		// Might be worth looking into how typescript type args work. You could do some funkiness
+		// with any here to not have to use the arrow function. But, the point of the function is
+		// to run a block of syncronous code and make sure the result is the right type (or hold an error)
+		// So I don't completely hate this. Have a play about and see what works for you
+
+		if (hasedPasswordResult.error) {
+			return res
+				.status(statusCode.INTERNAL_SERVER_ERROR)
+				.send(formatError(hasedPasswordResult.error))
+		}
 
 		const user = await updateUserById(
 			id,
-			{ username, password: hasedPassword },
+			{ username, password: hasedPasswordResult.data },
 			{
 				new: true,
 				runValidators: true,
