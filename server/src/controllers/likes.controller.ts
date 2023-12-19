@@ -1,5 +1,5 @@
 import express from "express";
-import { getRecipeById } from "../models/recipe.model";
+import { getFavRecipes, getRecipeById } from "../models/recipe.model";
 import { getUserById } from "../models/user.model";
 
 export const likeARecipe = async (
@@ -177,31 +177,13 @@ export const getFavRecipesByUser = async (
 ) => {
 	try {
 		const { id } = req.params;
-		const { recipeId } = req.body;
-
-		if (!recipeId) {
-			return res.status(400).send({
-				status: 0,
-				message: "Error: Something is missing.",
-			});
-		}
 
 		const user = await getUserById(id);
-		if (!user.favRecipes.includes(recipeId)) {
-			return res.status(400).send({
-				status: 0,
-				message: "Recipe is not in your favourites.",
-			});
-		}
-		user.favRecipes = user.favRecipes.filter(
-			(item) => item.toString() !== recipeId
-		);
-		await user.save();
+		const favRecipes = await getFavRecipes(user.favRecipes);
 
 		res.status(200).send({
 			status: 1,
-			message: "Recipe removed from favourites successfully",
-			favRecipes: user.favRecipes,
+			favRecipes,
 		});
 	} catch (error) {
 		console.log(error);
