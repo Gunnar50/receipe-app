@@ -31,7 +31,7 @@ export async function isAuthenticated(
 		}
 
 		// add userId to the request for next function
-		req.userId = user.id.toString();
+		req.userId = user._id.toString();
 		return next();
 	} catch (error) {
 		console.log(error);
@@ -64,8 +64,7 @@ export async function isOwner(
 			});
 		}
 
-		// Why did you return in the func above and not here? Just curious
-		next();
+		return next();
 	} catch (error) {
 		console.log(error);
 		return res.status(statusCode.INTERNAL_SERVER_ERROR).send({

@@ -12,9 +12,7 @@ export async function loginUser(req: express.Request, res: express.Response) {
 		const validation = loginSchema.safeParse({ email, password });
 
 		if (!validation.success) {
-			// hacky way of checking the error
-			// typescript did not let me do "validation.error" (?) dont know why
-			const errorResult = validation as unknown as { error: ZodError };
+			const errorResult = validation as { error: ZodError };
 
 			return res.status(statusCode.BAD_REQUEST).send({
 				message: "Validation error",
@@ -32,12 +30,12 @@ export async function loginUser(req: express.Request, res: express.Response) {
 		const hashedPassword = generateHash(password);
 
 		if (user.password !== hashedPassword) {
-			return res.status(403).send({
+			return res.status(statusCode.FORBIDDEN).send({
 				message: "Email or Password incorrect.",
 			});
 		}
 
-		user.sessionToken = generateHash(user.id.toString());
+		user.sessionToken = generateHash(user._id.toString());
 
 		// I would advise not saving session tokens in the database like this.
 		// if you want to persist them, I'd suggest another table.
@@ -50,6 +48,7 @@ export async function loginUser(req: express.Request, res: express.Response) {
 		});
 
 		return res.status(statusCode.OK).send({
+			sessionToken: user.sessionToken,
 			message: "Logged in successfully.",
 		});
 		/**
@@ -61,7 +60,6 @@ export async function loginUser(req: express.Request, res: express.Response) {
 	} catch (error) {
 		console.log(error);
 		return res.status(statusCode.INTERNAL_SERVER_ERROR).send({
-			status: 0,
 			message: "Error: Something went wrong in our end.",
 		});
 	}
@@ -81,8 +79,6 @@ export async function signUpUser(req: express.Request, res: express.Response) {
 		const validation = signupSchema.safeParse({ email, password, username });
 
 		if (!validation.success) {
-			// hacky way of checking the error
-			// typescript did not let me do "validation.error" (?) dont know why
 			const errorResult = validation as unknown as { error: ZodError };
 
 			return res.status(statusCode.BAD_REQUEST).send({
@@ -105,7 +101,7 @@ export async function signUpUser(req: express.Request, res: express.Response) {
 			password: hashedPassword,
 		});
 
-		return res.status(statusCode.OK).send({
+		return res.status(statusCode.CREATED).send({
 			message: "User registered successfully.",
 			newUser,
 		});

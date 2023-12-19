@@ -11,7 +11,7 @@ import usersRouter from "./routes/users.route";
 import { HTTP_STATUS as statusCode } from "./utils/httpStatus";
 
 dotenv.config();
-const app = express();
+export const app = express();
 
 // middlewares
 app.use(cors({ credentials: true }));
@@ -38,9 +38,10 @@ app.use(function onError(
 
 // mongodb connection
 mongoose.connect(process.env.MONGO_URI);
-mongoose.connection.on("error", (error: Error) => console.log(error));
+export const mongodb = mongoose.connection;
+mongodb.on("error", (error: Error) => console.log(error));
 
-const server = http.createServer(app);
+export const server = http.createServer(app);
 const port = 6001 || process.env.PORT;
 server.listen(6001, () => {
 	console.log("Server running on port:", port);
