@@ -9,29 +9,32 @@ const UserSchema = new mongoose.Schema({
 		unique: "Email already exists",
 		match: [/.+\@.+\..+/, "Please fill a valid email address"],
 	},
-	password: { type: String, required: "Password is required" },
+	image: { type: Buffer },
+	password: { type: String, select: false, required: true },
 	sessionToken: { type: String, select: false },
 	updated: { type: Date },
 	createdAt: { type: Date, default: Date.now },
-	likedRecipes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Recipe" }],
-	favRecipes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Recipe" }],
-
-	// if we aren't using this yet, remove it.
-	// image: { type: String, required: "Image is required" },
+	likedRecipes: [{ type: mongoose.Schema.Types.ObjectId, ref: "recipes" }],
+	favRecipes: [{ type: mongoose.Schema.Types.ObjectId, ref: "recipes" }],
 });
 
-// Maybe rename to "users" so it matches the collection name. Often you refer to resources in plural anyway
-export const UserModel = mongoose.model("User", UserSchema); // "users" is the name of the collection
+export const UserModel = mongoose.model("users", UserSchema);
 
 export const getAllUsers = () => UserModel.find();
+
 export const getUserByEmail = (email: string) => UserModel.findOne({ email });
+
 export const getUserByUsername = (username: string) =>
 	UserModel.findOne({ username });
+
 export const getUserBySessionToken = (sessionToken: string) =>
 	UserModel.findOne({ sessionToken });
+
 export const getUserById = (id: string) => UserModel.findById(id);
+
 export const createUser = (values: Record<string, any>) =>
 	new UserModel(values).save().then((user) => user.toObject());
+
 export const deleteUserById = (id: string) =>
 	UserModel.findOneAndDelete({ _id: id });
 

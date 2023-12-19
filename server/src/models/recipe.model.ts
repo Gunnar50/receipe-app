@@ -7,21 +7,19 @@ const RecipeSchema = new mongoose.Schema({
 		{ type: String, required: "At least one ingredient is required" },
 	],
 	description: { type: String, required: "Description is required" },
-	image: { type: String, required: "Image is required" },
-	// image: { data: Buffer, contentType: String },
+	image: { type: String, required: "Image is required" }, // this will change to buffer later. string only for testing
 	cookingTime: { type: Number, required: "Cooking time is required" },
 	updated: Date,
 	owner: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: "User",
+		ref: "users",
 		require: true,
 	},
 	likes: { type: Number, default: 0 },
 	createdAt: { type: Date, default: Date.now },
-	// comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "comments" }],
 });
 
-export const RecipeModel = mongoose.model("Recipe", RecipeSchema);
+export const RecipeModel = mongoose.model("recipes", RecipeSchema);
 
 export const getRecipes = () =>
 	RecipeModel.find().populate("owner", "username").exec();

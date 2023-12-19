@@ -1,4 +1,5 @@
 import express from "express";
+import { HTTP_STATUS as statusCode } from "../utils/httpStatus";
 
 import {
 	createNewRecipe,
@@ -10,17 +11,16 @@ import {
 } from "../models/recipe.model";
 import { removeRecipesFromUser } from "../models/user.model";
 
-export const createRecipe = async (
+export async function createRecipe(
 	req: express.Request,
 	res: express.Response
-) => {
+) {
 	try {
 		const { id: owner } = req.params;
 		const { title, ingredients, description, image, cookingTime } = req.body;
 
 		if (!title || !ingredients || !description || !image || !cookingTime) {
-			return res.status(400).send({
-				status: 0,
+			return res.status(statusCode.BAD_REQUEST).send({
 				message: "Error: Something is missing.",
 			});
 		}
@@ -34,74 +34,69 @@ export const createRecipe = async (
 			owner,
 		});
 
-		return res.status(200).send({
-			status: 1,
+		return res.status(statusCode.OK).send({
 			message: "Recipe created successfully.",
 			newRecipe,
 		});
 	} catch (error) {
 		console.log(error);
-		return res.status(500).send({
-			status: 0,
+		return res.status(statusCode.INTERNAL_SERVER_ERROR).send({
 			message: "Error: Cannot create new recipe. Please try again later.",
 		});
 	}
-};
+}
 
-export const getAllRecipes = async (
+export async function getAllRecipes(
 	req: express.Request,
 	res: express.Response
-) => {
+) {
 	try {
 		const recipes = await getRecipes();
-		return res.status(200).send(recipes);
+		return res.status(statusCode.OK).send(recipes);
 	} catch (error) {
 		console.log(error);
-		return res.status(500).send({
-			status: 0,
+		return res.status(statusCode.INTERNAL_SERVER_ERROR).send({
 			message: "Error: Cannot get recipes. Please try again later.",
 		});
 	}
-};
+}
 
-export const getOwnRecipes = async (
+export async function getOwnRecipes(
 	req: express.Request,
 	res: express.Response
-) => {
+) {
 	try {
 		const { id } = req.params;
 		const recipes = await getRecipesByUser(id);
-		return res.status(200).send(recipes);
+		return res.status(statusCode.OK).send(recipes);
 	} catch (error) {
 		console.log(error);
-		return res.status(500).send({
-			status: 0,
+		return res.status(statusCode.INTERNAL_SERVER_ERROR).send({
 			message: "Error: Cannot get user recipe. Please try again later.",
 		});
 	}
-};
+}
 
-export const getSingleRecipe = async (
+export async function getSingleRecipe(
 	req: express.Request,
 	res: express.Response
-) => {
+) {
 	try {
 		const { id } = req.params;
 		const recipe = await getRecipeById(id);
-		return res.status(200).send(recipe);
+		return res.status(statusCode.OK).send(recipe);
 	} catch (error) {
 		console.log(error);
-		return res.status(500).send({
-			status: 0,
+		return res.status(statusCode.INTERNAL_SERVER_ERROR).send({
 			message: "Error: Cannot get user recipe. Please try again later.",
 		});
 	}
-};
+}
 
-export const deleteRecipe = async (
+export async function deleteRecipe(
 	req: express.Request,
 	res: express.Response
-) => {
+) {
 	try {
 		const { recipeId } = req.params;
 
@@ -111,56 +106,19 @@ export const deleteRecipe = async (
 		// remove the recipe from any user's liked or fav array
 		await removeRecipesFromUser(recipeId);
 
-		return res.status(200).send({
-			status: 1,
+		return res.status(statusCode.OK).send({
 			message: "Recipe deleted successfully.",
 		});
 	} catch (error) {
 		console.log(error);
-		return res.status(500).send({
+		return res.status(statusCode.INTERNAL_SERVER_ERROR).send({
 			status: 0,
 			message: "Error: Cannot get user recipe. Please try again later.",
 		});
 	}
-};
+}
 
-export const updateRecipe = async (
+export async function updateRecipe(
 	req: express.Request,
 	res: express.Response
-) => {
-	try {
-		const { recipeId } = req.params;
-		const { title, ingredients, description, image, cookingTime } = req.body;
-
-		if (!title || !ingredients || !description || !image || !cookingTime) {
-			return res.status(400).send({
-				status: 0,
-				message: "Fields cannot be empty.",
-			});
-		}
-
-		const recipe = await updateRecipeById(
-			recipeId,
-			{ title, ingredients, description, image, cookingTime },
-			{
-				new: true,
-				runValidators: true,
-			}
-		);
-
-		recipe.updated = new Date();
-		await recipe.save();
-
-		return res.status(200).send({
-			status: 1,
-			message: "Recipe updated successfully.",
-			recipe,
-		});
-	} catch (error) {
-		console.log(error);
-		return res.status(500).send({
-			status: 0,
-			message: "Error: Cannot get user recipe. Please try again later.",
-		});
-	}
-};
+) {}

@@ -8,6 +8,7 @@ import mongoose from "mongoose";
 import authRouter from "./routes/auth.route";
 import recipeRouter from "./routes/recipe.route";
 import usersRouter from "./routes/users.route";
+import { HTTP_STATUS as statusCode } from "./utils/httpStatus";
 
 dotenv.config();
 const app = express();
@@ -26,16 +27,20 @@ app.use("/recipes", recipeRouter);
 
 // https://reflectoring.io/express-error-handling/ something like this for the generic handler at top level
 // I overrided the onError function on the Express object on line 13. Normally, it'll just print the trace.
-app.use(function onError(err: Error, _1: express.Request, res: express.Response, _2: express.NextFunction) {
-	return res.status(400).send(err.message)
-})
+app.use(function onError(
+	err: Error,
+	_1: express.Request,
+	res: express.Response,
+	_2: express.NextFunction
+) {
+	return res.status(statusCode.BAD_REQUEST).send(err.message);
+});
 
 // mongodb connection
 mongoose.connect(process.env.MONGO_URI);
 mongoose.connection.on("error", (error: Error) => console.log(error));
 
-// Like this set up 👍🏾
-const server = http.createServer(app)
+const server = http.createServer(app);
 const port = 6001 || process.env.PORT;
 server.listen(6001, () => {
 	console.log("Server running on port:", port);
