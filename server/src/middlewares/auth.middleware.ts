@@ -1,23 +1,19 @@
 import express from "express";
 import { getUserBySessionToken } from "../models/user.model";
+import { HTTP_STATUS as statusCode } from "../utils/httpStatus";
+import { AuthenticatedRequest } from "../utils/interfaces";
 
-interface AuthenticatedRequest extends express.Request {
-	userId: string;
-}
-
-export const isAuthenticated = async (
+export async function isAuthenticated(
 	req: AuthenticatedRequest,
 	res: express.Response,
 	next: express.NextFunction
-) => {
+) {
 	try {
 		// take the token from the cookies
 		const sessionToken = req.cookies["sessionToken"];
 		if (!sessionToken) {
-			return res.status(401).send({
-				status: 0,
+			return res.status(statusCode.UNAUTHORIZED).send({
 				message: "Unathorized.",
-				type: "error",
 			});
 		}
 
@@ -29,31 +25,27 @@ export const isAuthenticated = async (
 		 * You're using Mongo, so the get by the ID will be faster than the sessionToken.
 		 */
 		if (!user) {
-			return res.status(403).send({
-				status: 0,
+			return res.status(statusCode.UNAUTHORIZED).send({
 				message: "Unathorized.",
-				type: "error",
 			});
 		}
 
 		// add userId to the request for next function
-		req.userId = user._id.toString();
-		// Same as before. Shouldn't be accessing private prop
+		req.userId = user.id.toString();
 		return next();
 	} catch (error) {
 		console.log(error);
-		return res.status(500).send({
-			status: 0,
+		return res.status(statusCode.INTERNAL_SERVER_ERROR).send({
 			message: "Error: Something went wrong in our end.",
 		});
 	}
-};
+}
 
-export const isOwner = async (
+export async function isOwner(
 	req: AuthenticatedRequest,
 	res: express.Response,
 	next: express.NextFunction
-) => {
+) {
 	try {
 		const { id } = req.params;
 		// if you want to use this as a string, cast it to one
@@ -61,15 +53,13 @@ export const isOwner = async (
 		const currentUserId = req.userId;
 
 		if (!currentUserId) {
-			return res.status(401).send({
-				status: 0,
+			return res.status(statusCode.UNAUTHORIZED).send({
 				message: "Unauthorized, please login.",
 			});
 		}
 
 		if (currentUserId.toString() !== id) {
-			return res.status(401).send({
-				status: 0,
+			return res.status(statusCode.UNAUTHORIZED).send({
 				message: "Unauthorized request.",
 			});
 		}
@@ -78,10 +68,8 @@ export const isOwner = async (
 		next();
 	} catch (error) {
 		console.log(error);
-		return res.status(500).send({
-			status: 0,
+		return res.status(statusCode.INTERNAL_SERVER_ERROR).send({
 			message: "Error: Something went wrong in our end.",
-			type: "error",
 		});
 	}
-};
+}
