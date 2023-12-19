@@ -28,7 +28,7 @@ Install the dependecies
 npm install
 ```
 
-There are two option to start the development:
+There are two options to start the development:
 
 Start Server and Client in different terminal
 
