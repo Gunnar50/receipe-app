@@ -24,11 +24,18 @@ app.use("/auth", authRouter);
 app.use("/users", usersRouter);
 app.use("/recipes", recipeRouter);
 
+// https://reflectoring.io/express-error-handling/ something like this for the generic handler at top level
+// I overrided the onError function on the Express object on line 13. Normally, it'll just print the trace.
+app.use(function onError(err: Error, _1: express.Request, res: express.Response, _2: express.NextFunction) {
+	return res.status(400).send(err.message)
+})
+
 // mongodb connection
 mongoose.connect(process.env.MONGO_URI);
 mongoose.connection.on("error", (error: Error) => console.log(error));
 
-const server = http.createServer(app);
+// Like this set up 👍🏾
+const server = http.createServer(app)
 const port = 6001 || process.env.PORT;
 server.listen(6001, () => {
 	console.log("Server running on port:", port);

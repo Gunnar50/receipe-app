@@ -7,6 +7,7 @@ import {
 	updateUserById,
 } from "../models/user.model";
 
+// What's the point of the users controller? Aren't user operations handled by auth?
 export const getUsers = async (req: express.Request, res: express.Response) => {
 	try {
 		const users = await getAllUsers();
