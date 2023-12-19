@@ -1,0 +1,23 @@
+{
+	"name": "recipe-app-ts",
+	"version": "1.0.0",
+	"description": "The project is a Recipe App, designed to allow users to contribute their own recipes, interact with others' recipes through likes and favorites, and potentially incorporate a meal planning feature.",
+	"main": "index.js",
+	"scripts": {
+		"server": "npm run --workspace=server start",
+		"client": "npm run --workspace=client start",
+		"start": "concurrently \"npm run --workspace=server start\" \"npm run --workspace=client start\"",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"private": true,
+	"workspaces": [
+		"client",
+		"server"
+	],
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"concurrently": "^8.2.2"
+	}
+}
