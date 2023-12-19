@@ -12,6 +12,7 @@ export async function tryPromise<T>(func: Promise<T>): Promise<Try<T>>
 {
   try {
     const data = await func
+    
     return <Try<T>>{data, error: null}
   } catch (error) {
     const result = <Try<T>>{data: null, error}
