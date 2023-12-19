@@ -4,7 +4,6 @@ The project is a Recipe App, designed to allow users to contribute their own rec
 
 ## TODO
 
-- change to monorepo
 - redo installation and setup in README.md
 - turn into a docker container
 - write tests for auth
@@ -14,25 +13,35 @@ The project is a Recipe App, designed to allow users to contribute their own rec
 Clone the repository
 
 ```
-git clone https://github.com/Gunnar50/portfolio-react-ts.git
+git clone https://github.com/Gunnar50/recipe-app-ts.git
 ```
 
 Navigate to the project directory
 
 ```
-cd portfolio-react-ts
+cd recipe-app-ts
 ```
 
-Install dependecies
+Install the dependecies
 
 ```
 npm install
 ```
 
-Start the development server
+There are two option to start the development:
+
+Start Server and Client in different terminal
 
 ```
-npm run dev
+npm run server
+
+npm run client
+```
+
+Or start both at once using:
+
+```
+npm start
 ```
 
 ## 🛠️Technology Stack
