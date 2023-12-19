@@ -2,9 +2,12 @@
 
 The project is a Recipe App, designed to allow users to contribute their own recipes, interact with others' recipes through likes and favorites, and potentially incorporate a meal planning feature.
 
-## Working on
+## TODO
 
-Back end recipe API to allow users to create new recipes.
+- change to monorepo
+- redo installation and setup in README.md
+- turn into a docker container
+- write tests for auth
 
 ## 🔧 Installation and Setup
 
@@ -25,7 +28,7 @@ Install dependecies
 ```
 npm install
 ```
- 
+
 Start the development server
 
 ```
