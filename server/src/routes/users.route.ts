@@ -11,9 +11,9 @@ const router = express.Router();
 router.get("/", isAuthenticated, getUsers);
 
 // send the user id to be deleted
-router.delete("/:id", isAuthenticated, isOwner, deleteUser);
+router.delete("/:userId", isAuthenticated, isOwner, deleteUser);
 
 // send the user id to be updated
-router.put("/:id", isAuthenticated, isOwner, updateUser);
+router.put("/:userId", isAuthenticated, isOwner, updateUser);
 
 export default router;

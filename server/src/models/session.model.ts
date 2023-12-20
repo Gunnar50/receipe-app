@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const SessionSchema = new mongoose.Schema({
 	expireAt: { type: Date },
-	user: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
+	userId: { type: mongoose.Schema.Types.ObjectId, ref: "users", unique: true },
 });
 
 export const SessionModel = mongoose.model("session", SessionSchema);
@@ -18,3 +18,7 @@ export const createNewSession = (values: Record<string, any>) =>
 // delete a session
 export const deleteSession = (sessionId: string) =>
 	SessionModel.findByIdAndDelete(sessionId);
+
+// return a session by a user id
+export const getSessionByUserId = (userId: string) =>
+	SessionModel.findOne({ userId });

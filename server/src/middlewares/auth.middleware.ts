@@ -1,7 +1,10 @@
 import express from "express";
-import { getUserBySessionToken } from "../models/user.model";
+import { deleteSession, getSessionById } from "../models/session.model";
 import { HTTP_STATUS as statusCode } from "../utils/httpStatus";
 import { AuthenticatedRequest } from "../utils/interfaces";
+
+// 15 minutes
+const sessionAddedTime = 1000 * 60 * 15;
 
 // this middleware is to check if a user is authenticated in general.
 export async function isAuthenticated(
@@ -19,20 +22,48 @@ export async function isAuthenticated(
 		}
 
 		// get an user using the token
-		const user = await getUserBySessionToken(sessionToken);
-		/**
-		 * What you could do instead of getting the user from the session token is decoding the token
-		 * and getting the user by ID. IRL, this is waaaay faster, safer, and better on the DB
-		 * You're using Mongo, so the get by the ID will be faster than the sessionToken.
-		 */
-		if (!user) {
+		// const user = await getUserBySessionToken(sessionToken);
+
+		// try to find the corresponding token in the database
+		const currentSession = await getSessionById(sessionToken);
+		if (!currentSession) {
 			return res.status(statusCode.UNAUTHORIZED).send({
 				message: "Unathorized.",
 			});
 		}
 
+		// check if the session is expired
+		const now = new Date();
+		if (currentSession.expireAt < now) {
+			await deleteSession(sessionToken);
+			res.clearCookie("sessionToken");
+			return res.status(statusCode.UNAUTHORIZED).send({
+				message: "Session expired. Please login.",
+			});
+		}
+
+		const oneHourFromNow = new Date(now.getTime() + 60 * 60 * 1000);
+		if (currentSession.expireAt < oneHourFromNow) {
+			// if has less than 1 hour remaining, extend by 15 minutes
+			currentSession.expireAt = new Date(
+				currentSession.expireAt.getTime() + sessionAddedTime
+			);
+			await currentSession.save();
+		}
+
+		/**
+		 * What you could do instead of getting the user from the session token is decoding the token
+		 * and getting the user by ID. IRL, this is waaaay faster, safer, and better on the DB
+		 * You're using Mongo, so the get by the ID will be faster than the sessionToken.
+		 */
+		// if (!user) {
+		// 	return res.status(statusCode.UNAUTHORIZED).send({
+		// 		message: "Unathorized.",
+		// 	});
+		// }
+
 		// add userId to the request for next function
-		req.userId = user._id.toString();
+		req.userId = currentSession.userId.toString();
 		return next();
 	} catch (error) {
 		console.log(error);
@@ -49,18 +80,12 @@ export async function isOwner(
 	next: express.NextFunction
 ) {
 	try {
-		const { id } = req.params;
+		const { userId } = req.params;
 		// if you want to use this as a string, cast it to one
 		// const currentUserId = req.userId as string;
 		const currentUserId = req.userId as string;
 
-		if (!currentUserId) {
-			return res.status(statusCode.UNAUTHORIZED).send({
-				message: "Unauthorized, please login.",
-			});
-		}
-
-		if (currentUserId !== id) {
+		if (currentUserId !== userId) {
 			return res.status(statusCode.UNAUTHORIZED).send({
 				message: "Unauthorized request.",
 			});
