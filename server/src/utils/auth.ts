@@ -1,6 +1,5 @@
 import crypto from "crypto";
 
-// Could be an export default really. Not fussed, but arror function stuff still applies
 /**
  *
  * @param password
