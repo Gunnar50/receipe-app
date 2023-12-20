@@ -9,6 +9,7 @@ import authRouter from "./routes/auth.route";
 import recipeRouter from "./routes/recipe.route";
 import usersRouter from "./routes/users.route";
 import { HTTP_STATUS as statusCode } from "./utils/httpStatus";
+import { formatError } from "utils/inlineHandlers";
 
 dotenv.config();
 export const app = express();
@@ -33,7 +34,7 @@ app.use(function onError(
 	res: express.Response,
 	_2: express.NextFunction
 ) {
-	return res.status(statusCode.BAD_REQUEST).send(err.message);
+	return res.status(statusCode.BAD_REQUEST).send(formatError(err));
 });
 
 // mongodb connection
