@@ -9,7 +9,7 @@ import authRouter from "./routes/auth.route";
 import recipeRouter from "./routes/recipe.route";
 import usersRouter from "./routes/users.route";
 import { HTTP_STATUS as statusCode } from "./utils/httpStatus";
-import { formatError } from "utils/inlineHandlers";
+import { formatError } from "./utils/inlineHandlers";
 
 dotenv.config();
 export const app = express();
