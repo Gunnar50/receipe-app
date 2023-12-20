@@ -3,6 +3,7 @@ import { getUserBySessionToken } from "../models/user.model";
 import { HTTP_STATUS as statusCode } from "../utils/httpStatus";
 import { AuthenticatedRequest } from "../utils/interfaces";
 
+// this middleware is to check if a user is authenticated in general.
 export async function isAuthenticated(
 	req: AuthenticatedRequest,
 	res: express.Response,
@@ -41,6 +42,7 @@ export async function isAuthenticated(
 	}
 }
 
+// this middleware is to allow the user to access their own data
 export async function isOwner(
 	req: AuthenticatedRequest,
 	res: express.Response,
@@ -50,7 +52,7 @@ export async function isOwner(
 		const { id } = req.params;
 		// if you want to use this as a string, cast it to one
 		// const currentUserId = req.userId as string;
-		const currentUserId = req.userId;
+		const currentUserId = req.userId as string;
 
 		if (!currentUserId) {
 			return res.status(statusCode.UNAUTHORIZED).send({
@@ -58,7 +60,7 @@ export async function isOwner(
 			});
 		}
 
-		if (currentUserId.toString() !== id) {
+		if (currentUserId !== id) {
 			return res.status(statusCode.UNAUTHORIZED).send({
 				message: "Unauthorized request.",
 			});
