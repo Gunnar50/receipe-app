@@ -22,10 +22,15 @@ router.get("/", getAllRecipes);
 
 // the id of the user is send in the url to make sure that the
 // user creating the recipe is the same user that is authenticated
-router.post("/:id", isAuthenticated, isOwner, createRecipe);
+router.post("/:userId", isAuthenticated, isOwner, createRecipe);
 
 // get all the user's recipe by user id
-router.get("/get-user-recipes/:id", isAuthenticated, isOwner, getOwnRecipes);
+router.get(
+	"/get-user-recipes/:userId",
+	isAuthenticated,
+	isOwner,
+	getOwnRecipes
+);
 
 // get a single recipe by id
 router.get("/get-recipe/:id", getSingleRecipe);
@@ -34,9 +39,9 @@ router.get("/get-recipe/:id", getSingleRecipe);
 router.put("/:id/:recipeId", isAuthenticated, isOwner, updateRecipe);
 router.delete("/:id/:recipeId", isAuthenticated, isOwner, deleteRecipe);
 
-router.post("/like/:id", isAuthenticated, isOwner, likeARecipe);
-router.post("/unlike/:id", isAuthenticated, isOwner, unlikeARecipe);
-router.post("/fav/:id", isAuthenticated, isOwner, favouriteARecipe);
-router.post("/unfav/:id", isAuthenticated, isOwner, unfavouriteARecipe);
+router.post("/like/:userId", isAuthenticated, isOwner, likeARecipe);
+router.post("/unlike/:userId", isAuthenticated, isOwner, unlikeARecipe);
+router.post("/fav/:userId", isAuthenticated, isOwner, favouriteARecipe);
+router.post("/unfav/:userId", isAuthenticated, isOwner, unfavouriteARecipe);
 
 export default router;
