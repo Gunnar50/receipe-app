@@ -42,7 +42,6 @@ export async function loginUser(req: express.Request, res: express.Response) {
 		}
 
 		// user.sessionToken = generateHash(user._id.toString());
-		// check if this user already have a session in the database
 
 		// create a new session that expires in two hours
 		const currentSession = await createNewSession({
@@ -52,8 +51,7 @@ export async function loginUser(req: express.Request, res: express.Response) {
 
 		if (!currentSession) {
 			return res.status(statusCode.OK).send({
-				sessionToken: user.sessionToken,
-				message: "Logged in successfully.",
+				message: "You are already logged in.",
 			});
 		}
 
