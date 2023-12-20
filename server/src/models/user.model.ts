@@ -11,8 +11,6 @@ const UserSchema = new mongoose.Schema({
 	},
 	image: { type: Buffer },
 	password: { type: String, select: false, required: true },
-	sessionToken: { type: String, select: false },
-	//add expire time
 	updated: { type: Date },
 	createdAt: { type: Date, default: Date.now },
 	likedRecipes: [{ type: mongoose.Schema.Types.ObjectId, ref: "recipes" }],

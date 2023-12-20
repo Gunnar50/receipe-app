@@ -73,7 +73,7 @@ export async function updateUser(req: express.Request, res: express.Response) {
 	const updatedUser = await tryPromise(
 		updateUserById(
 			userId,
-			{ username, password: hasedPasswordResult.data },
+			{ username, password: hashedPasswordResult.data },
 			{ new: true, runValidators: true }
 		)
 	);
@@ -87,7 +87,7 @@ export async function updateUser(req: express.Request, res: express.Response) {
 	updatedUser.data.updated = new Date();
 	const { error } = await tryPromise(updatedUser.data.save());
 
-	if (error) throw error
+	if (error) throw error;
 
 	if (error) {
 		return res

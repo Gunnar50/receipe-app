@@ -171,7 +171,7 @@ afterAll(async () => {
 	 * of your database in Mongo so that you can run your tests and clean data as needed
 	 *
 	 */
-	await mongodb.dropDatabase();
+	// await mongodb.dropDatabase();
 	await mongodb.close();
 	server.close();
 });
