@@ -1,6 +1,11 @@
 import express from "express";
 import { ZodError } from "zod";
-import { createNewSession, getSessionByUserId } from "../models/session.model";
+import {
+	createNewSession,
+	deleteSession,
+	getSessionByUserId,
+	SessionModel,
+} from "../models/session.model";
 import { createUser, getUserByEmail } from "../models/user.model";
 import { generateHash } from "../utils/auth";
 import { HTTP_STATUS as statusCode } from "../utils/httpStatus";
@@ -37,6 +42,7 @@ export async function loginUser(req: express.Request, res: express.Response) {
 		}
 
 		// user.sessionToken = generateHash(user._id.toString());
+		// check if this user already have a session in the database
 
 		// create a new session that expires in two hours
 		const currentSession = await createNewSession({
@@ -44,17 +50,24 @@ export async function loginUser(req: express.Request, res: express.Response) {
 			userId: user._id,
 		});
 
+		if (!currentSession) {
+			return res.status(statusCode.OK).send({
+				sessionToken: user.sessionToken,
+				message: "Logged in successfully.",
+			});
+		}
+
 		// I would advise not saving session tokens in the database like this.
 		// if you want to persist them, I'd suggest another table.
 		// await user.save();
 
-		res.cookie("sessionToken", currentSession._id, {
+		res.cookie("sessionToken", currentSession._id.toString(), {
 			domain: "localhost",
 			path: "/",
 		});
 
 		return res.status(statusCode.OK).send({
-			sessionToken: user.sessionToken,
+			sessionToken: currentSession._id.toString(),
 			message: "Logged in successfully.",
 		});
 		/**
@@ -71,7 +84,12 @@ export async function loginUser(req: express.Request, res: express.Response) {
 	}
 }
 
-export async function logoutUser(_: express.Request, res: express.Response) {
+export async function logoutUser(req: express.Request, res: express.Response) {
+	const { userId } = req.params;
+
+	const currentSession = await getSessionByUserId(userId);
+	await deleteSession(currentSession._id.toString());
+
 	res.clearCookie("sessionToken");
 	return res.status(statusCode.OK).send({
 		message: "Logged out successfully.",

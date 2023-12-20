@@ -32,9 +32,11 @@ export async function isAuthenticated(
 			});
 		}
 
+		// check if the session is expired
 		const now = new Date();
 		if (currentSession.expireAt < now) {
 			await deleteSession(sessionToken);
+			res.clearCookie("sessionToken");
 			return res.status(statusCode.UNAUTHORIZED).send({
 				message: "Session expired. Please login.",
 			});

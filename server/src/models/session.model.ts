@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const SessionSchema = new mongoose.Schema({
 	expireAt: { type: Date },
-	userId: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
+	userId: { type: mongoose.Schema.Types.ObjectId, ref: "users", unique: true },
 });
 
 export const SessionModel = mongoose.model("session", SessionSchema);

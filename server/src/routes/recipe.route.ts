@@ -36,8 +36,8 @@ router.get(
 router.get("/get-recipe/:id", getSingleRecipe);
 
 // update/delete - takes user id first then recipe id
-router.put("/:id/:recipeId", isAuthenticated, isOwner, updateRecipe);
-router.delete("/:id/:recipeId", isAuthenticated, isOwner, deleteRecipe);
+router.put("/:userId/:recipeId", isAuthenticated, isOwner, updateRecipe);
+router.delete("/:userId/:recipeId", isAuthenticated, isOwner, deleteRecipe);
 
 router.post("/like/:userId", isAuthenticated, isOwner, likeARecipe);
 router.post("/unlike/:userId", isAuthenticated, isOwner, unlikeARecipe);
