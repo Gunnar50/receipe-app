@@ -57,17 +57,17 @@ export async function updateUser(req: express.Request, res: express.Response) {
 	// an arrow function here. Because Arrow functions don't create lexical scope, we don't
 	// need to take in any params to get this to work at all.
 
-	const hasedPasswordResult = trySync<string>(() => generateHash(password));
+	const hashedPasswordResult = trySync<string>(() => generateHash(password));
 
 	// Might be worth looking into how typescript type args work. You could do some funkiness
 	// with any here to not have to use the arrow function. But, the point of the function is
 	// to run a block of syncronous code and make sure the result is the right type (or hold an error)
 	// So I don't completely hate this. Have a play about and see what works for you
 
-	if (hasedPasswordResult.error) {
+	if (hashedPasswordResult.error) {
 		return res
 			.status(statusCode.INTERNAL_SERVER_ERROR)
-			.send(formatError(hasedPasswordResult.error));
+			.send(formatError(hashedPasswordResult.error));
 	}
 
 	const updatedUser = await tryPromise(
@@ -86,6 +86,8 @@ export async function updateUser(req: express.Request, res: express.Response) {
 
 	updatedUser.data.updated = new Date();
 	const { error } = await tryPromise(updatedUser.data.save());
+
+	if (error) throw error
 
 	if (error) {
 		return res
