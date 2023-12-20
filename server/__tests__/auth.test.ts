@@ -19,7 +19,7 @@ async function createUser(
 	/**
 	 * Ideally, this should be in the test if you want to test the endpoint.
 	 * Take a look at the testing pyramid https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.headspin.io%2Fblog%2Fthe-testing-pyramid-simplified-for-one-and-all&psig=AOvVaw0he2f4tyjtyf6tah0rVoRz&ust=1703157717647000&source=images&cd=vfe&ved=0CBIQjRxqFwoTCNCb3fnznYMDFQAAAAAdAAAAABAE
-	 * This is an idustry standard. If you mention you understand this at interview, they will like it if they are a good shop
+	 * This is an industry standard. If you mention you understand this at interview, they will like it if they are a good shop
 	 */
 	return await request(app).post("/auth/signup").send({
 		email,

@@ -1,9 +1,4 @@
-import {
-	Try,
-	formatError,
-	tryPromise,
-	trySync,
-} from "../src/utils/inlineHandlers";
+import { formatError, tryPromise, trySync } from "../src/utils/inlineHandlers";
 
 /**
  * These tests are spot on. Nice work
