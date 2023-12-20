@@ -6,7 +6,8 @@ The project is a Recipe App, designed to allow users to contribute their own rec
 
 - redo installation and setup in README.md
 - turn into a docker container
-- write tests for auth
+- fix the tests for auth
+- write tests for recipe api
 
 ## 🛠️Technology Stack
 
