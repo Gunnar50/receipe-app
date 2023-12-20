@@ -27,8 +27,8 @@ export async function getUsers(_: express.Request, res: express.Response) {
 }
 
 export async function deleteUser(req: express.Request, res: express.Response) {
-	const { id } = req.params;
-	const { data, error } = await tryPromise(deleteUserById(id));
+	const { userId } = req.params;
+	const { data, error } = await tryPromise(deleteUserById(userId));
 
 	if (error) {
 		console.log(error);
@@ -44,7 +44,7 @@ export async function deleteUser(req: express.Request, res: express.Response) {
 }
 
 export async function updateUser(req: express.Request, res: express.Response) {
-	const { id } = req.params;
+	const { userId } = req.params;
 	const { username, password } = req.body;
 
 	if (!username || !password) {
@@ -72,7 +72,7 @@ export async function updateUser(req: express.Request, res: express.Response) {
 
 	const updatedUser = await tryPromise(
 		updateUserById(
-			id,
+			userId,
 			{ username, password: hasedPasswordResult.data },
 			{ new: true, runValidators: true }
 		)
