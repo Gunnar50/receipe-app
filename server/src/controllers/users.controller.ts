@@ -6,39 +6,41 @@ import {
 	deleteUserById,
 	getAllUsers,
 	updateUserById,
-	UserModel,
 } from "../models/user.model";
-import { tryPromise, formatError, trySync } from "utils/inlineHandlers";
+import { formatError, tryPromise, trySync } from "../utils/inlineHandlers";
 
 export async function getUsers(_: express.Request, res: express.Response) {
 	// Destructuring the returned object (it will always be a result type)
-	const {data, error} = await tryPromise(getAllUsers());
+	const { data, error } = await tryPromise(getAllUsers());
 
 	// if the error exists we handle it here. We return the 500 to the user
 	if (error) {
 		console.log(error);
 
 		// error formatter to make things neater
-		return res.status(statusCode.INTERNAL_SERVER_ERROR).send(formatError(error));
+		return res
+			.status(statusCode.INTERNAL_SERVER_ERROR)
+			.send(formatError(error));
 	}
 
 	return res.status(statusCode.OK).send(data);
 }
 
 export async function deleteUser(req: express.Request, res: express.Response) {
-	try {
-		const { id } = req.params;
-		await deleteUserById(id);
+	const { id } = req.params;
+	const { data, error } = await tryPromise(deleteUserById(id));
 
-		return res.status(statusCode.OK).send({
-			message: "User deleted successfully.",
-		});
-	} catch (error) {
+	if (error) {
 		console.log(error);
-		return res.status(statusCode.INTERNAL_SERVER_ERROR).send({
-			message: "Error: Something went wrong in our end.",
-		});
+		return res
+			.status(statusCode.INTERNAL_SERVER_ERROR)
+			.send(formatError(error));
 	}
+
+	return res.status(statusCode.OK).send({
+		message: "User deleted successfully.",
+		data,
+	});
 }
 
 export async function updateUser(req: express.Request, res: express.Response) {
@@ -65,31 +67,34 @@ export async function updateUser(req: express.Request, res: express.Response) {
 	if (hasedPasswordResult.error) {
 		return res
 			.status(statusCode.INTERNAL_SERVER_ERROR)
-			.send(formatError(hasedPasswordResult.error))
+			.send(formatError(hasedPasswordResult.error));
 	}
 
-	const user = await tryPromise<typeof UserModel>(updateUserById(
-		id,
-		{ username, password: hasedPasswordResult.data },
-		{
-			new: true,
-			runValidators: true,
-		}
-	));
+	const updatedUser = await tryPromise(
+		updateUserById(
+			id,
+			{ username, password: hasedPasswordResult.data },
+			{ new: true, runValidators: true }
+		)
+	);
 
-	if (user.error) {
-		return res.status(statusCode.NOT_FOUND).send(formatError(user.error));
+	if (updatedUser.error) {
+		return res
+			.status(statusCode.NOT_FOUND)
+			.send(formatError(updatedUser.error));
 	}
 
-	user.data.updated = new Date();
-	const {error} = await tryPromise(user.data.save());
+	updatedUser.data.updated = new Date();
+	const { error } = await tryPromise(updatedUser.data.save());
 
 	if (error) {
-		return res.status(statusCode.INTERNAL_SERVER_ERROR).send(formatError(error))
+		return res
+			.status(statusCode.INTERNAL_SERVER_ERROR)
+			.send(formatError(error));
 	}
 
 	return res.status(statusCode.OK).send({
 		message: "User updated successfully.",
-		user,
+		updatedUser,
 	});
 }
