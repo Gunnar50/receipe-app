@@ -5,7 +5,7 @@ import { HTTP_STATUS as statusCode } from "../utils/httpStatus";
 
 export async function likeARecipe(req: express.Request, res: express.Response) {
 	try {
-		const { id } = req.params;
+		const { userId } = req.params;
 		const { recipeId } = req.body;
 
 		if (!recipeId) {
@@ -14,7 +14,7 @@ export async function likeARecipe(req: express.Request, res: express.Response) {
 			});
 		}
 
-		const user = await getUserById(id);
+		const user = await getUserById(userId);
 		if (user.likedRecipes.includes(recipeId)) {
 			return res.status(statusCode.BAD_REQUEST).send({
 				message: "Recipe already liked by you.",
@@ -44,7 +44,7 @@ export async function unlikeARecipe(
 	res: express.Response
 ) {
 	try {
-		const { id } = req.params;
+		const { userId } = req.params;
 		const { recipeId } = req.body;
 
 		if (!recipeId) {
@@ -53,7 +53,7 @@ export async function unlikeARecipe(
 			});
 		}
 
-		const user = await getUserById(id);
+		const user = await getUserById(userId);
 		if (!user.likedRecipes.includes(recipeId)) {
 			return res.status(statusCode.BAD_REQUEST).send({
 				message: "Recipe is not liked by you.",
@@ -86,7 +86,7 @@ export async function favouriteARecipe(
 	res: express.Response
 ) {
 	try {
-		const { id } = req.params;
+		const { userId } = req.params;
 		const { recipeId } = req.body;
 
 		if (!recipeId) {
@@ -95,7 +95,7 @@ export async function favouriteARecipe(
 			});
 		}
 
-		const user = await getUserById(id);
+		const user = await getUserById(userId);
 		if (user.favRecipes.includes(recipeId)) {
 			return res.status(statusCode.BAD_REQUEST).send({
 				message: "Recipe is already in your favourites.",
@@ -121,7 +121,7 @@ export async function unfavouriteARecipe(
 	res: express.Response
 ) {
 	try {
-		const { id } = req.params;
+		const { userId } = req.params;
 		const { recipeId } = req.body;
 
 		if (!recipeId) {
@@ -130,7 +130,7 @@ export async function unfavouriteARecipe(
 			});
 		}
 
-		const user = await getUserById(id);
+		const user = await getUserById(userId);
 		if (!user.favRecipes.includes(recipeId)) {
 			return res.status(statusCode.BAD_REQUEST).send({
 				message: "Recipe is not in your favourites.",
@@ -158,9 +158,9 @@ export async function getFavRecipesByUser(
 	res: express.Response
 ) {
 	try {
-		const { id } = req.params;
+		const { userId } = req.params;
 
-		const user = await getUserById(id);
+		const user = await getUserById(userId);
 		const favRecipes = await getFavRecipes(user.favRecipes);
 
 		res.status(statusCode.OK).send({

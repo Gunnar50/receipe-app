@@ -16,7 +16,7 @@ export async function createRecipe(
 	res: express.Response
 ) {
 	try {
-		const { id: owner } = req.params;
+		const { userId: owner } = req.params;
 		const { title, ingredients, description, image, cookingTime } = req.body;
 
 		if (!title || !ingredients || !description || !image || !cookingTime) {
@@ -66,8 +66,8 @@ export async function getOwnRecipes(
 	res: express.Response
 ) {
 	try {
-		const { id } = req.params;
-		const recipes = await getRecipesByUser(id);
+		const { userId } = req.params;
+		const recipes = await getRecipesByUser(userId);
 		return res.status(statusCode.OK).send(recipes);
 	} catch (error) {
 		console.log(error);
