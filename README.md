@@ -8,6 +8,21 @@ The project is a Recipe App, designed to allow users to contribute their own rec
 - turn into a docker container
 - write tests for auth
 
+## 🛠️Technology Stack
+
+**Front end:**
+
+- React
+- Redux
+- TypeScript
+- TailwindCSS
+
+**Back end:**
+
+- Node
+- Express
+- MongoDB
+
 ## 🔧 Installation and Setup
 
 Clone the repository
@@ -20,6 +35,22 @@ Navigate to the project directory
 
 ```
 cd recipe-app-ts
+```
+
+To be able to run this repo locally you will have to create a MongoDB database and setup the .env file. There are two ways of setting up the database, locally (**Compass**) or in the cloud (**Atlas**). Both options are free.
+
+[How to Create Database](https://www.mongodb.com/basics/create-database)
+
+[Atlas Website](https://www.mongodb.com/atlas)
+
+Once you have created the database, you have to create a .env file in the **ROOT** directory and add the following environment variables replacing the URI with the one for your database.
+
+```
+MONGO_URI="mongodb+srv://<username>:<password>@cluster.mongodb.net/?retryWrites=true&w=majority"
+
+SECRET="this_can_be_anything"
+
+SALT="this_can_be_anything"
 ```
 
 Install the dependecies
@@ -44,20 +75,21 @@ Or start both at once using:
 npm start
 ```
 
-## 🛠️Technology Stack
+## 📝 Testing
 
-**Front end:**
+Jest is used for testing. Before running any tests make sure you clone and install all the depencies as spcified above.
 
-- React
-- Redux
-- TypeScript
-- TailwindCSS
+Navigate to the project root directory and run:
 
-**Back end:**
+```
+npm test
+```
 
-- Node
-- Express
-- MongoDB
+To run a specific test you can run (change the folder and test name):
+
+```
+npm test -- server/__test__/auth.test.ts
+```
 
 ## ⭐️ Show your support
 
