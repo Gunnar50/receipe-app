@@ -129,6 +129,7 @@ describe("Authentication & User Account Tests", () => {
 			token
 		);
 		expect(updateRes.statusCode).toEqual(statusCode.OK);
+		expect(updateRes.body).toHaveProperty("updatedUser");
 		expect(updateRes.body.message).toEqual("User updated successfully.");
 	});
 
