@@ -1,4 +1,5 @@
 import { createUser } from '../../src/models/user.model'
+import { generateHash } from '../../src/utils/auth'
 
 export async function createTestUser(opts: factoryOptions = {traits: [], attributes: {}}) {
     const attrsToAttach: Record<string, any> = userDefinition()
@@ -23,7 +24,7 @@ export async function createTestUser(opts: factoryOptions = {traits: [], attribu
 function userDefinition(): Record<string, any> {
     const data: Record<string, any> = {
         email: "test@example.com",
-        password: "password123",
+        password: generateHash("password123"),
         username: "testuser",
         // whatever other fields you want here
     }
