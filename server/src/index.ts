@@ -1,11 +1,6 @@
-import dotenv from "dotenv";
 import http from "http";
 import mongoose from "mongoose";
 import app from "./utils/app";
-
-dotenv.config();
-
-console.log(process.env.MONGO_URI);
 
 // mongodb connection
 mongoose.connect(process.env.MONGO_URI);

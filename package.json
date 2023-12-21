@@ -7,7 +7,7 @@
 		"server": "npm run --workspace=server start",
 		"client": "npm run --workspace=client start",
 		"start": "concurrently \"npm run --workspace=server start\" \"npm run --workspace=client start\"",
-		"test": "cross-env NODE_ENV=test jest --testTimeout=5000"
+		"test": "jest"
 	},
 	"private": true,
 	"workspaces": [
