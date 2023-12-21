@@ -24,9 +24,9 @@ export async function tryPromise<T>(func: Promise<T>): Promise<Try<T>> {
 
 export function trySync<T>(func: Function): Try<T> {
 	try {
-		return <Try<any>>{ data: func(), error: null };
+		return <Try<T>>{ data: func(), error: null };
 	} catch (error) {
-		const result = <Try<any>>{ data: null, error };
+		const result = <Try<T>>{ data: null, error };
 		// console.error(result.error?.message);
 
 		return result;

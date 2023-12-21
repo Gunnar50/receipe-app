@@ -82,7 +82,7 @@ describe("Authentication & User Account Tests", () => {
 			const res = await request(app).post(url).send(existingUserDetails);
 
 			expect(res.statusCode).toEqual(statusCode.BAD_REQUEST);
-			
+
 			expect(res.body.message).toEqual(
 				"Email already registered. Please login."
 			);
