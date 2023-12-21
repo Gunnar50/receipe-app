@@ -3,13 +3,17 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
+import path from "path";
 import authRouter from "../routes/auth.route";
 import recipeRouter from "../routes/recipe.route";
 import usersRouter from "../routes/users.route";
 import { HTTP_STATUS as statusCode } from "../utils/httpStatus";
 import { formatError } from "../utils/inlineHandlers";
 
-dotenv.config();
+// set the .env location
+// this is nescessary as we run tests from the root and run the server from the server folder.
+dotenv.config({ path: path.resolve(__dirname, "../../../.env") });
+
 const app = express();
 
 // middlewares
