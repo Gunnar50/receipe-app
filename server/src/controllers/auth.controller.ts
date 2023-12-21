@@ -130,7 +130,6 @@ export async function signUpUser(req: express.Request, res: express.Response) {
 	} catch (error) {
 		console.log(error);
 		return res.status(statusCode.INTERNAL_SERVER_ERROR).send({
-			status: 0,
 			message: "Error: Something went wrong on our end.",
 		});
 	}
