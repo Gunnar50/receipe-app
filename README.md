@@ -4,9 +4,10 @@ The project is a Recipe App, designed to allow users to contribute their own rec
 
 ## TODO
 
+- update code to use tryPromise and trySync
+- fix the tests for auth
 - redo installation and setup in README.md
 - turn into a docker container
-- fix the tests for auth
 - write tests for recipe api
 
 ## 🛠️Technology Stack
