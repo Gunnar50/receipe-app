@@ -87,8 +87,6 @@ export async function updateUser(req: express.Request, res: express.Response) {
 	updatedUser.data.updated = new Date();
 	const { error } = await tryPromise(updatedUser.data.save());
 
-	if (error) throw error;
-
 	if (error) {
 		return res
 			.status(statusCode.INTERNAL_SERVER_ERROR)
