@@ -81,7 +81,10 @@ describe("Authentication & User Account Tests", () => {
 			};
 			const res = await request(app).post(url).send(invalidPayload);
 			expect(res.statusCode).toEqual(statusCode.BAD_REQUEST);
-			expect(res.body.message).toEqual("Validation error");
+			expect(res.body.message).toEqual([
+				"Invalid email format.",
+				"Password must be a minimum of 6 characters.",
+			]);
 		});
 	});
 
@@ -106,13 +109,16 @@ describe("Authentication & User Account Tests", () => {
 			expect(res.body.message).toEqual("Email or Password incorrect.");
 		});
 
-		// login with invalid email or password
+		// login with invalid email and password
 		it("should not allow the login with invalid credentials", async () => {
 			const res = await request(app)
 				.post(url)
 				.send({ email: "testexample.com", password: "pass" });
 			expect(res.statusCode).toEqual(statusCode.BAD_REQUEST);
-			expect(res.body.message).toEqual("Validation error");
+			expect(res.body.message).toEqual([
+				"Invalid email format.",
+				"Password must be a minimum of 6 characters.",
+			]);
 		});
 
 		// login successfully
