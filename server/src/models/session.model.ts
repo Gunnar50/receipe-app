@@ -1,5 +1,10 @@
 import mongoose from "mongoose";
 
+export interface Session {
+	expiredAt: Date;
+	userId: string;
+}
+
 const SessionSchema = new mongoose.Schema({
 	expireAt: { type: Date },
 	userId: { type: mongoose.Schema.Types.ObjectId, ref: "users", unique: true },
