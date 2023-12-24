@@ -2,6 +2,7 @@ import request from "supertest";
 import app from "../src/utils/app";
 import { HTTP_STATUS as statusCode } from "../src/utils/httpStatus";
 import { clearDB, closeDB, connectDB } from "./testdb";
+import { createTestUser } from "./factories/users.factory";
 
 /**
  * I like these methods, but they feel more like utility functions rather than test code.
@@ -23,6 +24,11 @@ describe("Authentication & User Account Tests", () => {
 	beforeAll(async () => {
 		await connectDB();
 	});
+
+	beforeEach(async () => {
+		await clearDB()
+	})
+
 	afterAll(async () => {
 		await clearDB();
 		await closeDB();
@@ -65,8 +71,18 @@ describe("Authentication & User Account Tests", () => {
 
 		// trying to create an account with the same email as above
 		it("should not create a new user with the same email", async () => {
-			const res = await request(app).post(url).send(payload);
+			const existingUser = await createTestUser()
+
+			const existingUserDetails = {
+				email: existingUser.email,
+				password: "password123",
+				username: existingUser.username
+			}
+
+			const res = await request(app).post(url).send(existingUserDetails);
+
 			expect(res.statusCode).toEqual(statusCode.BAD_REQUEST);
+
 			expect(res.body.message).toEqual(
 				"Email already registered. Please login."
 			);
