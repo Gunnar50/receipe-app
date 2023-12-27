@@ -1,8 +1,5 @@
 import { formatError, tryPromise, trySync } from "../src/utils/inlineHandlers";
 
-/**
- * These tests are spot on. Nice work
- */
 describe("Testing the inlineHandlers", () => {
 	describe("tryPromise", () => {
 		it("should return data on successful promise resolution", async () => {

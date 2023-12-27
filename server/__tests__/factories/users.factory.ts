@@ -1,19 +1,26 @@
-import { createUser } from '../../src/models/user.model'
-import { generateHash } from '../../src/utils/auth'
+import { createUser } from "../../src/models/user.model";
+import { generateHash } from "../../src/utils/auth";
 
-export async function createTestUser(opts: factoryOptions = {traits: [], attributes: {}}) {
-    const attrsToAttach: Record<string, any> = userDefinition()
+interface factoryOptions {
+	traits: Array<string>;
+	attributes: Record<string, any>;
+}
 
-    /**
-     * If you decide you don't want traits, you can remove this
-     */
-    if (opts.traits.length > 0) {
-        opts.traits.forEach(trait => attachTrait(trait, attrsToAttach))
-    }
+export async function createTestUser(
+	opts: factoryOptions = { traits: [], attributes: {} }
+) {
+	const attrsToAttach: Record<string, any> = userDefinition();
 
-    const userAttrs = Object.assign(attrsToAttach, opts.attributes)
+	/**
+	 * If you decide you don't want traits, you can remove this
+	 */
+	if (opts.traits.length > 0) {
+		opts.traits.forEach((trait) => attachTrait(trait, attrsToAttach));
+	}
 
-    return await createUser(userAttrs)
+	const userAttrs = Object.assign(attrsToAttach, opts.attributes);
+
+	return await createUser(userAttrs);
 }
 
 /**
@@ -22,26 +29,25 @@ export async function createTestUser(opts: factoryOptions = {traits: [], attribu
  * number of characters.
  */
 function userDefinition(): Record<string, any> {
-    const data: Record<string, any> = {
-        email: "test@example.com",
-        password: generateHash("password123"),
-        username: "testuser",
-        // whatever other fields you want here
-    }
+	const data: Record<string, any> = {
+		email: "test@example.com",
+		password: generateHash("password123"),
+		username: "testuser",
+	};
 
-    return data
+	return data;
 }
 
 /**
- * Traits are for if you want to create templates of data you want on users. 
- * There are much nicer ways of doing this, but if you're just experimenting, 
+ * Traits are for if you want to create templates of data you want on users.
+ * There are much nicer ways of doing this, but if you're just experimenting,
  * this will work for a while.
  */
 function attachTrait(trait: string, attributes: Record<string, any>) {
-    switch (trait) {
-        case "admin":
-            attributes['email'] = 'admin_user@admin_user.com'
-            break
-        default:
-    }
+	switch (trait) {
+		case "admin":
+			attributes["email"] = "admin_user@admin_user.com";
+			break;
+		default:
+	}
 }
