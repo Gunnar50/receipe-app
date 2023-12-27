@@ -1,8 +1,8 @@
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
 
-export interface Session {
-	expiredAt: Date;
-	userId: string;
+export interface ISession extends Document {
+	expireAt: Date;
+	userId: mongoose.Schema.Types.ObjectId;
 }
 
 const SessionSchema = new mongoose.Schema({

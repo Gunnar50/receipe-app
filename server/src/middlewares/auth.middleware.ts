@@ -1,11 +1,15 @@
 import express from "express";
-import { deleteSession, getSessionById } from "../models/session.model";
+import {
+	deleteSession,
+	getSessionById,
+	ISession,
+} from "../models/session.model";
 import { HTTP_STATUS as statusCode } from "../utils/httpStatus";
-import { formatError, tryPromise, trySync } from "../utils/inlineHandlers";
+import { formatError, Try, tryPromise } from "../utils/inlineHandlers";
 import { AuthenticatedRequest } from "../utils/interfaces";
 
 // 15 minutes
-const sessionAddedTime = 1000 * 60 * 15;
+const sessionAddedTime: number = 1000 * 60 * 15;
 
 // this middleware is to check if a user is authenticated in general.
 export async function isAuthenticated(
@@ -14,7 +18,7 @@ export async function isAuthenticated(
 	next: express.NextFunction
 ) {
 	// take the token from the cookies
-	const sessionToken = req.cookies["sessionToken"];
+	const sessionToken: string = req.cookies["sessionToken"];
 	if (!sessionToken) {
 		return res.status(statusCode.UNAUTHORIZED).send({
 			message: "Unathorized.",
@@ -23,6 +27,8 @@ export async function isAuthenticated(
 
 	// try to find the corresponding token in the database
 	const currentSession = await tryPromise(getSessionById(sessionToken));
+
+	// if the error is not null
 	if (currentSession.error) {
 		return res.status(statusCode.INTERNAL_SERVER_ERROR).send({
 			message: "Something went wrong",
@@ -30,6 +36,7 @@ export async function isAuthenticated(
 		});
 	}
 
+	// if the error is null and the data is null
 	if (!currentSession.data) {
 		return res.status(statusCode.UNAUTHORIZED).send({
 			message: "Unathorized.",
@@ -37,7 +44,7 @@ export async function isAuthenticated(
 	}
 
 	// check if the session is expired
-	const now = new Date();
+	const now: Date = new Date();
 	if (currentSession.data.expireAt < now) {
 		const { error } = await tryPromise(deleteSession(sessionToken));
 		if (error) {
@@ -53,7 +60,7 @@ export async function isAuthenticated(
 		});
 	}
 
-	const oneHourFromNow = new Date(now.getTime() + 60 * 60 * 1000);
+	const oneHourFromNow: Date = new Date(now.getTime() + 60 * 60 * 1000);
 	if (currentSession.data.expireAt < oneHourFromNow) {
 		// if has less than 1 hour remaining, extend by 15 minutes
 		currentSession.data.expireAt = new Date(
@@ -69,7 +76,7 @@ export async function isAuthenticated(
 	}
 
 	// add userId to the request for next function
-	req.userId = currentSession.data.userId.toString();
+	req.userId = currentSession.data.userId as unknown as string;
 	return next();
 }
 
@@ -80,7 +87,7 @@ export async function isOwner(
 	next: express.NextFunction
 ) {
 	const { userId } = req.params;
-	const currentUserId = req.userId as string;
+	const currentUserId: string = req.userId as string;
 
 	if (currentUserId !== userId) {
 		return res.status(statusCode.UNAUTHORIZED).send({
