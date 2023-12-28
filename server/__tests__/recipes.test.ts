@@ -1,6 +1,7 @@
 import request from "supertest";
 import app from "../src/utils/app";
 import { HTTP_STATUS as statusCode } from "../src/utils/httpStatus";
+import { createRecipe } from "./factories/recipe.factory";
 import { clearDB, closeDB, connectDB } from "./testdb";
 
 describe.skip("Recipes API Tests", () => {
@@ -13,15 +14,22 @@ describe.skip("Recipes API Tests", () => {
 	});
 
 	// testing the post route, to create new recipes
-	describe("POST /:userId", () => {
-		it("should create new recipes", () => {
+	describe("POST /recipes/:userId", () => {
+		it("should create a new recipe", () => {
 			// generate and create a new user
+			// login the user
 			// test creating a new recipe
 		});
 
-		it("should not create new recipes with missing fields", () => {
+		it("should not create a new recipe - missing fields", () => {
 			// generate and create a new user
+			// login the user
 			// test creating a new recipe with missing fields
+		});
+
+		it("should not create a new recipe - user not logged in", () => {
+			// generate and create a new user
+			// test creating a new recipe
 		});
 	});
 
