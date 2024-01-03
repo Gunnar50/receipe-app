@@ -35,6 +35,7 @@ describe("Authentication & User Account Tests", () => {
 		await closeDB();
 	});
 
+	// REGISTER TEST
 	describe("POST /auth/signup", () => {
 		const url: string = "/auth/signup";
 
@@ -85,6 +86,7 @@ describe("Authentication & User Account Tests", () => {
 		});
 	});
 
+	// LOGIN TEST
 	describe("POST /auth/login", () => {
 		const url = "/auth/login";
 
@@ -140,7 +142,6 @@ describe("Authentication & User Account Tests", () => {
 		// update failed, missing password
 		it("should not update, missing password", async () => {
 			const { user, sessionToken } = await loginUserGetToken();
-			console.log(user, sessionToken);
 
 			const updateRes = await request(app)
 				.put(updateUrl + user._id)

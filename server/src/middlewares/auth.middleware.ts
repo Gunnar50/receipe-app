@@ -19,6 +19,7 @@ export async function isAuthenticated(
 ) {
 	// take the token from the cookies
 	const sessionToken: string = req.cookies["sessionToken"];
+
 	if (!sessionToken) {
 		return res.status(statusCode.UNAUTHORIZED).send({
 			message: "Unathorized.",
@@ -76,7 +77,8 @@ export async function isAuthenticated(
 	}
 
 	// add userId to the request for next function
-	req.userId = currentSession.data.userId as unknown as string;
+	req.userId = currentSession.data.userId.toString();
+
 	return next();
 }
 
@@ -87,6 +89,7 @@ export async function isOwner(
 	next: express.NextFunction
 ) {
 	const { userId } = req.params;
+
 	const currentUserId: string = req.userId as string;
 
 	if (currentUserId !== userId) {

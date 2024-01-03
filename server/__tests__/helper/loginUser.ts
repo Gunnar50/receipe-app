@@ -14,10 +14,6 @@ export async function loginUserGetToken() {
 		password: "password123",
 	});
 
-	// const sessionToken = userLogin.headers["set-cookie"][0];
-	// change to the above cause it was giving me
-	// too much trouble as the sessionToken might be null or return error.
-
 	// get the session token with that user id
 	const sessionToken = await tryPromise(
 		getSessionByUserId(user._id as unknown as string)
