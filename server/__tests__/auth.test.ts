@@ -1,8 +1,9 @@
 import request from "supertest";
 import app from "../src/utils/app";
 import { HTTP_STATUS as statusCode } from "../src/utils/httpStatus";
-import { clearDB, closeDB, connectDB } from "./testdb";
 import { createTestUser } from "./factories/users.factory";
+import { loginUserGetToken } from "./helper/loginUser";
+import { clearDB, closeDB, connectDB } from "./testdb";
 
 /**
  * I like these methods, but they feel more like utility functions rather than test code.
@@ -26,60 +27,40 @@ describe("Authentication & User Account Tests", () => {
 	});
 
 	beforeEach(async () => {
-		await clearDB()
-	})
+		await clearDB();
+	});
 
 	afterAll(async () => {
 		await clearDB();
 		await closeDB();
 	});
-	/**
-	 * This is a big no no. If you want data to exist in your test before it starts, you should use the beforeAll
-	 * or beforeEach hooks. Or, even simpler, just have the test set the data up for you.
-	 */
-
-	/**
-	 * The reason I left this here is to be able to test the update and delete routes.
-	 * if I do not have the userId and token as "global variables", then I would need to create a
-	 * new user and login to get the userId and token to be able to test those routes.
-	 *
-	 * I just thought of not repeating too much code this way.
-	 * What do you think, as now we have the memory database setup too, so it is not
-	 * messing up with the production db
-	 */
-	let userId: string = "";
-	let token: string = "";
 
 	describe("POST /auth/signup", () => {
-		const url = "/auth/signup";
-		const payload = {
-			email: "test@example.com",
-			password: "password123",
-			username: "testuser",
-		};
+		const url: string = "/auth/signup";
 
 		it("should create a new user", async () => {
-			// create a test user
-			const res = await request(app).post(url).send(payload);
+			const res = await request(app).post(url).send({
+				email: "test@example.com",
+				password: "password123",
+				username: "testuser",
+			});
+
 			expect(res.statusCode).toEqual(statusCode.CREATED);
 			expect(res.body).toHaveProperty("newUser");
 			expect(res.body.message).toEqual("User registered successfully.");
-
-			// Aside from this line below. I really like this test. Focused and clean. Good work
-			userId = res.body.newUser._id.toString();
 		});
 
 		// trying to create an account with the same email as above
 		it("should not create a new user with the same email", async () => {
-			const existingUser = await createTestUser()
+			// create a test user
+			const existingUser = await createTestUser();
 
-			const existingUserDetails = {
+			// try to create another user with the same email as above
+			const res = await request(app).post(url).send({
 				email: existingUser.email,
 				password: "password123",
-				username: existingUser.username
-			}
-
-			const res = await request(app).post(url).send(existingUserDetails);
+				username: "anotherUser",
+			});
 
 			expect(res.statusCode).toEqual(statusCode.BAD_REQUEST);
 
@@ -139,47 +120,59 @@ describe("Authentication & User Account Tests", () => {
 
 		// login successfully
 		it("should login the user", async () => {
+			// create the test user
+			const user = await createTestUser();
+
 			// login the test account
 			const res = await request(app)
 				.post(url)
-				.send({ email: "test@example.com", password: "password123" });
+				.send({ email: user.email, password: "password123" });
+
 			expect(res.statusCode).toEqual(statusCode.OK);
 			expect(res.body.message).toEqual("Logged in successfully.");
-
-			// Need to get rid of this line
-			token = res.headers["set-cookie"][0];
 		});
 	});
 
+	// UPDATE TESTS
 	describe("PUT /users/:userId", () => {
 		const updateUrl = "/users/";
 
 		// update failed, missing password
 		it("should not update, missing password", async () => {
+			const { user, sessionToken } = await loginUserGetToken();
+			console.log(user, sessionToken);
+
 			const updateRes = await request(app)
-				.put(updateUrl + userId)
+				.put(updateUrl + user._id)
 				.send({ username: "test", password: "" })
-				.set("Cookie", token);
+				.set("Cookie", [`sessionToken=${sessionToken.data?._id}`]);
+
 			expect(updateRes.statusCode).toEqual(statusCode.BAD_REQUEST);
 			expect(updateRes.body.message).toEqual("Fields cannot be empty.");
 		});
 
 		// update failed, missing username
 		it("should not update, missing username", async () => {
+			const { user, sessionToken } = await loginUserGetToken();
+
 			const updateRes = await request(app)
-				.put(updateUrl + userId)
+				.put(updateUrl + user._id)
 				.send({ username: "", password: "password123" })
-				.set("Cookie", token);
+				.set("Cookie", [`sessionToken=${sessionToken.data?._id}`]);
+
 			expect(updateRes.statusCode).toEqual(statusCode.BAD_REQUEST);
 			expect(updateRes.body.message).toEqual("Fields cannot be empty.");
 		});
 
 		// update successful
 		it("should update", async () => {
+			const { user, sessionToken } = await loginUserGetToken();
+
 			const updateRes = await request(app)
-				.put(updateUrl + userId)
+				.put(updateUrl + user._id)
 				.send({ username: "new-username", password: "password123" })
-				.set("Cookie", token);
+				.set("Cookie", [`sessionToken=${sessionToken.data?._id}`]);
+
 			expect(updateRes.statusCode).toEqual(statusCode.OK);
 			expect(updateRes.body).toHaveProperty("updatedUser");
 			expect(updateRes.body.message).toEqual("User updated successfully.");
@@ -191,10 +184,12 @@ describe("Authentication & User Account Tests", () => {
 
 		// delete user successfully
 		it("should delete the user", async () => {
-			// delete the user so it is not persisted in the database
+			const { user, sessionToken } = await loginUserGetToken();
+
 			const del = await request(app)
-				.delete(deleteUrl + userId)
-				.set("Cookie", token);
+				.delete(deleteUrl + user._id)
+				.set("Cookie", [`sessionToken=${sessionToken.data?._id}`]);
+
 			expect(del.statusCode).toEqual(statusCode.OK);
 			expect(del.body.message).toEqual("User deleted successfully.");
 		});
