@@ -9,7 +9,7 @@ export async function loginUserGetToken() {
 	const user = await createTestUser();
 
 	// login the test user
-	const userLogin = await request(app).post("/auth/login").send({
+	await request(app).post("/auth/login").send({
 		email: user.email,
 		password: "password123",
 	});

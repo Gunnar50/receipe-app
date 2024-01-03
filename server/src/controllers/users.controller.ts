@@ -53,16 +53,7 @@ export async function updateUser(req: express.Request, res: express.Response) {
 		});
 	}
 
-	// Little bit of a cheeky hack. Because we take a function object in, we kinda have to use
-	// an arrow function here. Because Arrow functions don't create lexical scope, we don't
-	// need to take in any params to get this to work at all.
-
 	const hashedPasswordResult = trySync<string>(() => generateHash(password));
-
-	// Might be worth looking into how typescript type args work. You could do some funkiness
-	// with any here to not have to use the arrow function. But, the point of the function is
-	// to run a block of syncronous code and make sure the result is the right type (or hold an error)
-	// So I don't completely hate this. Have a play about and see what works for you
 
 	if (hashedPasswordResult.error) {
 		return res

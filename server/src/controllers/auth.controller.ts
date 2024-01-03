@@ -101,7 +101,7 @@ export async function logoutUser(req: express.Request, res: express.Response) {
 
 	const currentSession = await tryPromise(getSessionByUserId(userId));
 	// this shouldn't happen, it only happen if the user is not logged in and tries to logout.
-	// could happen in testing
+	// could happen in testing (?)
 	if (currentSession.error) {
 		return res
 			.status(statusCode.NOT_FOUND)

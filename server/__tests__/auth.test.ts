@@ -135,6 +135,30 @@ describe("Authentication & User Account Tests", () => {
 		});
 	});
 
+	// LOGOUT TEST
+	describe("POST /auth/logout/:userId", () => {
+		const url = "/auth/logout/";
+
+		// logout if not logged in
+		it("should return 404 if user is not logged in asit does not pass a user id", async () => {
+			const res = await request(app).post(url);
+
+			expect(res.statusCode).toEqual(statusCode.NOT_FOUND);
+		});
+
+		// should allow loggin out
+		it("should allow user to logout", async () => {
+			const { user, sessionToken } = await loginUserGetToken();
+
+			const res = await request(app)
+				.post(url + user._id)
+				.set("Cookie", [`sessionToken=${sessionToken.data?._id}`]);
+
+			expect(res.statusCode).toEqual(statusCode.OK);
+			expect(res.body.message).toEqual("Logged out successfully.");
+		});
+	});
+
 	// UPDATE TESTS
 	describe("PUT /users/:userId", () => {
 		const updateUrl = "/users/";
