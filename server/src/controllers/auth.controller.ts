@@ -72,7 +72,7 @@ export async function loginUser(req: express.Request, res: express.Response) {
 
 	/** check if the session already exists.
 	 * 	this should never happen if data is sent from the front end
-	 * 	this is only if we are testing and calling the api directly, the it prevents on
+	 * 	this is only if we are testing and calling the api directly, then it prevents on
 	 * 	create a new session to the exisiting user and send OK status, because it doesnt really matter
 	 */
 
@@ -101,6 +101,8 @@ export async function logoutUser(req: express.Request, res: express.Response) {
 
 	const currentSession = await tryPromise(getSessionByUserId(userId));
 	// this shouldn't happen, it only happen if the user is not logged in and tries to logout.
+	// and user wouldnt be able to get to this route without going through the auth middleware
+	// which requires the userId and the user to be logged in
 	// could happen in testing (?)
 	if (currentSession.error) {
 		return res

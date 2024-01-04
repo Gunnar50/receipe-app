@@ -9,7 +9,7 @@ export async function loginUserGetToken() {
 	const user = await createTestUser();
 
 	// login the test user
-	await request(app).post("/auth/login").send({
+	const loginResponse = await request(app).post("/auth/login").send({
 		email: user.email,
 		password: "password123",
 	});
@@ -20,5 +20,5 @@ export async function loginUserGetToken() {
 	);
 
 	// return the user and session token
-	return { user, sessionToken };
+	return { user, loginResponse, sessionToken };
 }

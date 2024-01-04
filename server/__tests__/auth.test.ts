@@ -37,7 +37,7 @@ describe("Authentication & User Account Tests", () => {
 
 	// REGISTER TEST
 	describe("POST /auth/signup", () => {
-		const url: string = "/auth/signup";
+		const url = "/auth/signup";
 
 		it("should create a new user", async () => {
 			const res = await request(app).post(url).send({
@@ -64,7 +64,6 @@ describe("Authentication & User Account Tests", () => {
 			});
 
 			expect(res.statusCode).toEqual(statusCode.BAD_REQUEST);
-
 			expect(res.body.message).toEqual(
 				"Email already registered. Please login."
 			);
@@ -95,6 +94,7 @@ describe("Authentication & User Account Tests", () => {
 			const res = await request(app)
 				.post(url)
 				.send({ email: "wrong_email@example.com", password: "password123" });
+
 			expect(res.statusCode).toEqual(statusCode.FORBIDDEN);
 			expect(res.body.message).toEqual("Email or Password incorrect.");
 		});
@@ -104,6 +104,7 @@ describe("Authentication & User Account Tests", () => {
 			const res = await request(app)
 				.post(url)
 				.send({ email: "test@example.com", password: "password" });
+
 			expect(res.statusCode).toEqual(statusCode.FORBIDDEN);
 			expect(res.body.message).toEqual("Email or Password incorrect.");
 		});
@@ -113,6 +114,7 @@ describe("Authentication & User Account Tests", () => {
 			const res = await request(app)
 				.post(url)
 				.send({ email: "testexample.com", password: "pass" });
+
 			expect(res.statusCode).toEqual(statusCode.BAD_REQUEST);
 			expect(res.body.message).toEqual([
 				"Invalid email format.",
@@ -120,18 +122,27 @@ describe("Authentication & User Account Tests", () => {
 			]);
 		});
 
+		// login twice with correct credentials
+		it("should login the user the first time, and reject the second time", async () => {
+			const { loginResponse } = await loginUserGetToken();
+			expect(loginResponse.statusCode).toEqual(statusCode.OK);
+			expect(loginResponse.body.message).toEqual("Logged in successfully.");
+
+			// tries to login a second time with the same credentials
+			const { loginResponse: loginResponse2 } = await loginUserGetToken();
+			expect(loginResponse2.statusCode).toEqual(statusCode.CONFLICT);
+			expect(loginResponse2.body.message).toEqual("You are already logged in.");
+		});
+
 		// login successfully
 		it("should login the user", async () => {
-			// create the test user
-			const user = await createTestUser();
+			const { loginResponse, sessionToken } = await loginUserGetToken();
 
-			// login the test account
-			const res = await request(app)
-				.post(url)
-				.send({ email: user.email, password: "password123" });
-
-			expect(res.statusCode).toEqual(statusCode.OK);
-			expect(res.body.message).toEqual("Logged in successfully.");
+			expect(loginResponse.statusCode).toEqual(statusCode.OK);
+			expect(loginResponse.body.sessionToken).toEqual(
+				sessionToken.data?._id.toString()
+			);
+			expect(loginResponse.body.message).toEqual("Logged in successfully.");
 		});
 	});
 

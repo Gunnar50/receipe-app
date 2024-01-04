@@ -10,8 +10,8 @@ export async function connectDB() {
 	// see that these options are deprecated, but the docs are still using them with the ts-ignore.
 	await mongoose.connect(uri, {
 		// @ts-ignore
-		useNewUrlParser: true,
-		useUnifiedTopology: true,
+		// useNewUrlParser: true,
+		// useUnifiedTopology: true,
 	});
 }
 
