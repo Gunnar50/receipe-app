@@ -1,6 +1,19 @@
 import mongoose from "mongoose";
 import { UpdateOptions } from "../utils/interfaces";
 
+export type RecipeType = {
+	_id: mongoose.Types.ObjectId;
+	title: string;
+	ingredients: string[];
+	description: string;
+	image: string;
+	cookingTime: number;
+	updated?: Date;
+	owner: mongoose.Types.ObjectId;
+	likes: number;
+	createdAt: Date;
+};
+
 const RecipeSchema = new mongoose.Schema({
 	title: { type: String, required: "Title is required" },
 	ingredients: [
@@ -44,5 +57,7 @@ export const updateRecipeById = (
 	options?: UpdateOptions
 ) => RecipeModel.findByIdAndUpdate(id, values, options);
 
-export const createNewRecipe = (values: Record<string, any>) =>
+export const createNewRecipe = (
+	values: Record<string, any>
+): Promise<RecipeType> =>
 	new RecipeModel(values).save().then((recipe) => recipe.toObject());

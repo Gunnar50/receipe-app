@@ -4,9 +4,9 @@ import app from "../../src/utils/app";
 import { tryPromise } from "../../src/utils/inlineHandlers";
 import { createTestUser } from "../factories/users.factory";
 
-export async function loginUserGetToken() {
+export async function loginUserGetToken(email: string = "test@example.com") {
 	// create a user
-	const user = await createTestUser();
+	const user = await createTestUser(email);
 
 	// login the test user
 	const loginResponse = await request(app).post("/auth/login").send({

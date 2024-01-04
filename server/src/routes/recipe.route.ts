@@ -20,7 +20,7 @@ const router = express.Router();
 // get all the recipes
 router.get("/", getAllRecipes);
 
-// the id of the user is send in the url to make sure that the
+// the id of the user is sent in the url to make sure that the
 // user creating the recipe is the same user that is authenticated
 router.post("/:userId", isAuthenticated, isOwner, createRecipe);
 
@@ -33,6 +33,7 @@ router.get(
 );
 
 // get a single recipe by id
+// using for testing purposes only, to verify a specific recipe exists
 router.get("/get-recipe/:id", getSingleRecipe);
 
 // update/delete - takes user id first then recipe id

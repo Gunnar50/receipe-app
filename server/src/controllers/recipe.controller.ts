@@ -83,7 +83,16 @@ export async function getSingleRecipe(
 ) {
 	try {
 		const { id } = req.params;
+		console.log(id);
+
 		const recipe = await getRecipeById(id);
+		console.log(recipe);
+
+		if (!recipe) {
+			return res
+				.status(statusCode.NOT_FOUND)
+				.send({ message: "Recipe not found." });
+		}
 		return res.status(statusCode.OK).send(recipe);
 	} catch (error) {
 		console.log(error);
@@ -101,7 +110,13 @@ export async function deleteRecipe(
 		const { recipeId } = req.params;
 
 		// delete the recipe from the database
-		await deleteRecipeById(recipeId);
+		const deletedRecipe = await deleteRecipeById(recipeId);
+
+		if (!deletedRecipe) {
+			return res
+				.status(statusCode.NOT_FOUND)
+				.send({ message: "Cannot delete, recipe not found." });
+		}
 
 		// remove the recipe from any user's liked or fav array
 		await removeRecipesFromUser(recipeId);
@@ -112,8 +127,8 @@ export async function deleteRecipe(
 	} catch (error) {
 		console.log(error);
 		return res.status(statusCode.INTERNAL_SERVER_ERROR).send({
-			status: 0,
 			message: "Error: Cannot get user recipe. Please try again later.",
+			error: error,
 		});
 	}
 }
