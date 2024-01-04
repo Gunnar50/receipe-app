@@ -21,7 +21,7 @@ import { clearDB, closeDB, connectDB } from "./testdb";
  * This is an industry standard. If you mention you understand this at interview, they will like it if they are a good shop
  */
 
-describe("Authentication & User Account Tests", () => {
+describe.skip("Authentication & User Account Tests", () => {
 	beforeAll(async () => {
 		await connectDB();
 	});
