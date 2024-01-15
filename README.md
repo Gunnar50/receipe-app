@@ -4,8 +4,7 @@ The project is a Recipe App, designed to allow users to contribute their own rec
 
 ## TODO
 
-- write tests for recipe api
-- update RECIPES to use tryPromise and trySync
+- start the front end
 - turn into a docker container
 - redo installation and setup in README.md
 
@@ -78,7 +77,7 @@ npm start
 
 ## 📝 Testing
 
-Jest is used for testing. Before running any tests make sure you clone and install all the depencies as spcified above.
+Jest is used for testing. Before running any tests make sure you clone and install all the dependencies as specified above.
 
 Navigate to the project root directory and run:
 
