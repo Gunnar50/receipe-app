@@ -70,9 +70,10 @@ export async function updateUser(req: express.Request, res: express.Response) {
 	);
 
 	if (updatedUser.error) {
-		return res
-			.status(statusCode.NOT_FOUND)
-			.send(formatError(updatedUser.error));
+		return res.status(statusCode.NOT_FOUND).send({
+			message: "User not found.",
+			errors: formatError(updatedUser.error),
+		});
 	}
 
 	updatedUser.data.updated = new Date();
@@ -86,6 +87,6 @@ export async function updateUser(req: express.Request, res: express.Response) {
 
 	return res.status(statusCode.OK).send({
 		message: "User updated successfully.",
-		updatedUser,
+		updatedUser: updatedUser.data,
 	});
 }
