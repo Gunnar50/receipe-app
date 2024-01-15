@@ -23,7 +23,7 @@ describe("Recipes API Tests", () => {
 	});
 
 	// get all recipes route
-	describe.skip("GET /recipes/", () => {
+	describe("GET /recipes/", () => {
 		it("should return all recipes in the database", async () => {
 			// creating a few recipes
 			const { recipes } = await createRandomNumberOfRecipes();
@@ -46,7 +46,7 @@ describe("Recipes API Tests", () => {
 	});
 
 	// testing the post route, to create new recipes
-	describe.skip("POST /recipes/:userId", () => {
+	describe("POST /recipes/:userId", () => {
 		const url = "/recipes/";
 
 		it("should not create a new recipe - missing fields", async () => {
@@ -60,7 +60,13 @@ describe("Recipes API Tests", () => {
 				.set("Cookie", [`sessionToken=${sessionToken.data?._id}`]);
 
 			expect(res.statusCode).toEqual(statusCode.BAD_REQUEST);
-			expect(res.body.message).toEqual("Fields cannot be empty.");
+			expect(res.body.message).toEqual([
+				"Title is required.",
+				"Required",
+				"Description is required.",
+				"Image is required.",
+				"Cooking time is required.",
+			]);
 		});
 
 		it("should not create a new recipe - user does not exist", async () => {
@@ -90,14 +96,14 @@ describe("Recipes API Tests", () => {
 				.set("Cookie", [`sessionToken=${sessionToken.data?._id}`])
 				.send(getRandomRecipe());
 
-			expect(res.statusCode).toEqual(statusCode.OK);
+			expect(res.statusCode).toEqual(statusCode.CREATED);
 			expect(res.body).toHaveProperty("newRecipe");
 			expect(res.body.message).toEqual("Recipe created successfully.");
 		});
 	});
 
 	// get a specific user's ALL recipes
-	describe.skip("GET /recipes/get-user-recipes/:userId", () => {
+	describe("GET /recipes/get-user-recipes/:userId", () => {
 		const url = "/recipes/get-user-recipes/";
 
 		it("should get all the recipes of a specific user", async () => {
@@ -150,8 +156,8 @@ describe("Recipes API Tests", () => {
 	});
 
 	// update a specific recipe
-	// NEEDS TEST AGAIN
-	describe.skip("PUT recipes/:userId/:recipeId", () => {
+	//add more tests
+	describe("PUT recipes/:userId/:recipeId", () => {
 		it("should update a recipe", async () => {
 			// generate and create a new user, login the user, create a recipe with this user
 			const { recipes, user, sessionToken } =
@@ -173,8 +179,7 @@ describe("Recipes API Tests", () => {
 	});
 
 	// delete a specific recipe
-	// NEEDS TEST AGAIN
-	describe.skip("DELETE recipes/:userId/:recipeId", () => {
+	describe("DELETE recipes/:userId/:recipeId", () => {
 		it("should delete a recipe", async () => {
 			// generate and create a new user, login the user, create a recipe with this user
 			const { recipes, user, sessionToken } =
@@ -183,7 +188,7 @@ describe("Recipes API Tests", () => {
 			// grab first recipe on the array
 			const recipeId = recipes[0]._id;
 
-			// test updating a recipe
+			// test deleting a recipe
 			const res = await request(app)
 				.delete(`/recipes/${user._id}/${recipeId}`)
 				.set("Cookie", [`sessionToken=${sessionToken.data?._id}`]);
@@ -195,6 +200,8 @@ describe("Recipes API Tests", () => {
 			const getRecipe = await request(app).get(
 				`/recipes/get-recipe/${recipeId}`
 			);
+			console.log(getRecipe.body.message);
+
 			expect(getRecipe.statusCode).toEqual(statusCode.NOT_FOUND);
 			expect(getRecipe.body.message).toEqual("Recipe not found.");
 		});
@@ -211,12 +218,12 @@ describe("Recipes API Tests", () => {
 				.set("Cookie", [`sessionToken=${sessionToken.data?._id}`]);
 
 			expect(res.statusCode).toEqual(statusCode.NOT_FOUND);
-			expect(res.body.message).toEqual("Cannot delete, recipe not found.");
+			expect(res.body.message).toEqual("Recipe not found.");
 		});
 	});
 
 	// get a single recipe
-	describe.skip("GET recipes/get-recipe/:id", () => {
+	describe("GET recipes/get-recipe/:id", () => {
 		it("should get a single recipe of a specific user", async () => {
 			// generate and create a new user
 			// login the user
@@ -244,8 +251,8 @@ describe("Recipes API Tests", () => {
 				`/recipes/get-recipe/${non_existent_id}`
 			);
 
-			expect(res.body.message).toEqual("Recipe not found.");
 			expect(res.statusCode).toEqual(statusCode.NOT_FOUND);
+			expect(res.body.message).toEqual("Recipe not found.");
 		});
 	});
 });
