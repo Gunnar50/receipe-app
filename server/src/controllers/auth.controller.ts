@@ -91,6 +91,8 @@ export async function loginUser(req: express.Request, res: express.Response) {
 
 	// send OK back with the session token and a successfull message
 	return res.status(statusCode.OK).send({
+		userId: user.data._id,
+		username: user.data.username,
 		sessionToken: currentSession.data._id.toString(),
 		message: "Logged in successfully.",
 	});
