@@ -1,11 +1,7 @@
 import express from "express";
-import {
-	deleteSession,
-	getSessionById,
-	ISession,
-} from "../models/session.model";
+import { deleteSession, getSessionById } from "../models/session.model";
 import { HTTP_STATUS as statusCode } from "../utils/httpStatus";
-import { formatError, Try, tryPromise } from "../utils/inlineHandlers";
+import { Try, formatError, tryPromise } from "../utils/inlineHandlers";
 import { AuthenticatedRequest } from "../utils/interfaces";
 
 // 15 minutes
