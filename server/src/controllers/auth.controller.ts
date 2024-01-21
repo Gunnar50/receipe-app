@@ -62,41 +62,41 @@ export async function loginUser(req: express.Request, res: express.Response) {
 		});
 	}
 
-	// create a new session for this user that expires in two hours
+	// try getting a session from this user, if it exists that means the user is already logged in
+	// just send them back the session token
 	const currentSession = await tryPromise(
+		getSessionByUserId(user.data._id.toString())
+	);
+
+	// create a new session for this user that expires in two hours
+	const sessionExpireDate = new Date(Date.now() + 1000 * 60 * 60 * 2);
+	// add 30sec for testing purposes
+	// const sessionExpireDate = new Date(Date.now() + 1000 * 30);
+	const newSession = await tryPromise(
 		createNewSession({
-			// add 2 hours expirition to session
-			expireAt: new Date(Date.now() + 1000 * 60 * 60 * 2),
-			// add 30sec for testing purposes
-			// expireAt: new Date(Date.now() + 1000 * 30),
+			expireAt: sessionExpireDate,
 			userId: user.data._id,
 		})
 	);
 
-	/** check if the session already exists.
-	 * 	this should never happen if data is sent from the front end
-	 * 	this is only if we are testing and calling the api directly, then it prevents on
-	 * 	create a new session to the exisiting user and send OK status, because it doesnt really matter
-	 */
-
-	if (currentSession.error) {
-		return res.status(statusCode.CONFLICT).send({
-			message: "You are already logged in.",
-			errors: formatError(currentSession.error),
-		});
-	}
-
 	// save the session to a cookie
-	res.cookie("sessionToken", currentSession.data._id.toString(), {
-		domain: "localhost",
-		path: "/",
-	});
+	res.cookie(
+		"sessionToken",
+		currentSession.data
+			? currentSession.data._id.toString()
+			: newSession.data._id.toString(),
+		{
+			domain: "localhost",
+			path: "/",
+			expires: sessionExpireDate,
+			httpOnly: true, // cookie only sent in http requests
+		}
+	);
 
 	// send OK back with the session token and a successfull message
 	return res.status(statusCode.OK).send({
 		userId: user.data._id,
 		username: user.data.username,
-		sessionToken: currentSession.data._id.toString(),
 		message: "Logged in successfully.",
 	});
 }
