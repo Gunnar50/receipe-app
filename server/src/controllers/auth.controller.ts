@@ -65,7 +65,10 @@ export async function loginUser(req: express.Request, res: express.Response) {
 	// create a new session for this user that expires in two hours
 	const currentSession = await tryPromise(
 		createNewSession({
-			expiredAt: new Date(Date.now() + 1000 * 60 * 60 * 2),
+			// add 2 hours expirition to session
+			expireAt: new Date(Date.now() + 1000 * 60 * 60 * 2),
+			// add 30sec for testing purposes
+			// expireAt: new Date(Date.now() + 1000 * 30),
 			userId: user.data._id,
 		})
 	);
@@ -189,4 +192,13 @@ export async function signUpUser(req: express.Request, res: express.Response) {
 		message: "User registered successfully.",
 		newUser: newUser.data,
 	});
+}
+
+export async function validateSession(
+	req: express.Request,
+	res: express.Response
+) {
+	return res
+		.status(statusCode.OK)
+		.send({ message: "Valid session", isValid: true });
 }
