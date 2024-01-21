@@ -26,5 +26,4 @@ const toastSlice = createSlice({
 export const { setContent } = toastSlice.actions;
 export const selectContent = (state: { toast: ToastState }) =>
 	state.toast.content;
-
 export default toastSlice.reducer;
