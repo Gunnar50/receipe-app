@@ -17,9 +17,9 @@ dotenv.config({ path: path.resolve(__dirname, "../../../.env") });
 const app = express();
 
 // middlewares
-app.use(cors({ credentials: true }));
-app.use(compression());
 app.use(cookieParser());
+app.use(cors({ credentials: true, origin: true }));
+app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
