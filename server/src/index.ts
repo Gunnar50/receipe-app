@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import app from "./utils/app";
 
 // mongodb connection
-mongoose.connect(process.env.MONGO_URI);
+mongoose.connect(process.env.MONGO_URI, { dbName: "RECIPE_APP_DB" });
 const mongodb = mongoose.connection;
 mongodb.on("error", (error: Error) => console.log(error));
 
