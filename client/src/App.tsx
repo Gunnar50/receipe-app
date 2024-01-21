@@ -4,10 +4,9 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import { Auth } from "./components/authentication/Authentication";
-import { AuthState, selectUser, validateSession } from "./redux/authSlice";
+import { selectUser, validateSession } from "./redux/authSlice";
 import { selectContent, setContent } from "./redux/toastSlice";
 import API from "./utils/api";
-import { getLocalStore } from "./utils/storage";
 
 function App() {
 	const dispatch = useDispatch();
