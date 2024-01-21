@@ -1,40 +1,57 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {
+	getLocalStore,
+	removeLocalStore,
+	setLocalStore,
+} from "../utils/storage";
 
 interface UserState {
-	isAuth: boolean;
-	userId: string | null;
-	username: string | null;
-	sessionToken: string | null;
-}
-
-interface LoginPayload {
 	userId: string;
 	username: string;
 	sessionToken: string;
 }
 
-const initialState: UserState = {
+export interface AuthState {
+	isAuth: boolean;
+	user: UserState | null;
+}
+
+// const storedState = getLocalStore<AuthState>("auth");
+
+const initialState: AuthState = {
 	isAuth: false,
-	userId: null,
-	username: null,
-	sessionToken: null,
+	user: null,
 };
 
 const authSlice = createSlice({
 	name: "auth",
-	initialState,
+	initialState: initialState,
 	reducers: {
-		login: (state, action: PayloadAction<LoginPayload>) => {
+		login: (state, action: PayloadAction<UserState>) => {
 			state.isAuth = true;
-			state.userId = action.payload.userId;
-			state.username = action.payload.username;
-			state.sessionToken = action.payload.sessionToken;
+			state.user = action.payload;
+			setLocalStore<AuthState>("auth", state);
+		},
+
+		logout: (state) => {
+			state.isAuth = false;
+			state.user = null;
+			removeLocalStore("auth");
+		},
+
+		validateSession: (state, action: PayloadAction<boolean>) => {
+			if (!action.payload) {
+				state.isAuth = false;
+				state.user = null;
+				removeLocalStore("auth");
+			}
 		},
 	},
 });
 
-export const { login } = authSlice.actions;
-export const selectIsAuthenticated = (state: { user: UserState }) =>
-	state.user.isAuth;
+export const { login, logout, validateSession } = authSlice.actions;
+export const selectIsAuthenticated = (state: { auth: AuthState }) =>
+	state.auth.isAuth;
+export const selectUser = (state: { auth: AuthState }) => state.auth.user;
 
 export default authSlice.reducer;
