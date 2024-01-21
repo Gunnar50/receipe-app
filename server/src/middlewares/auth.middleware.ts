@@ -46,7 +46,7 @@ export async function isAuthenticated(
 		const { error } = await tryPromise(deleteSession(sessionToken));
 		if (error) {
 			return res.status(statusCode.INTERNAL_SERVER_ERROR).send({
-				message: "Something went wrong",
+				message: "Something went wrong when deleting the session.",
 				errors: formatError(error),
 			});
 		}
@@ -57,20 +57,20 @@ export async function isAuthenticated(
 		});
 	}
 
-	const oneHourFromNow: Date = new Date(now.getTime() + 60 * 60 * 1000);
-	if (currentSession.data.expireAt < oneHourFromNow) {
-		// if has less than 1 hour remaining, extend by 15 minutes
-		currentSession.data.expireAt = new Date(
-			currentSession.data.expireAt.getTime() + sessionAddedTime
-		);
-		const { error } = await tryPromise(currentSession.data.save());
-		if (error) {
-			return res.status(statusCode.INTERNAL_SERVER_ERROR).send({
-				message: "Something went wrong",
-				errors: formatError(error),
-			});
-		}
-	}
+	// const oneHourFromNow: Date = new Date(now.getTime() + 60 * 60 * 1000);
+	// if (currentSession.data.expireAt < oneHourFromNow) {
+	// 	// if has less than 1 hour remaining, extend by 15 minutes
+	// 	currentSession.data.expireAt = new Date(
+	// 		currentSession.data.expireAt.getTime() + sessionAddedTime
+	// 	);
+	// 	const { error } = await tryPromise(currentSession.data.save());
+	// 	if (error) {
+	// 		return res.status(statusCode.INTERNAL_SERVER_ERROR).send({
+	// 			message: "Something went wrong",
+	// 			errors: formatError(error),
+	// 		});
+	// 	}
+	// }
 
 	// add userId to the request for next function
 	req.userId = currentSession.data.userId.toString();
