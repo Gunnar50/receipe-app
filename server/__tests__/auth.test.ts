@@ -21,7 +21,7 @@ import { clearDB, closeDB, connectDB } from "./testdb";
  * This is an industry standard. If you mention you understand this at interview, they will like it if they are a good shop
  */
 
-describe.skip("Authentication & User Account Tests", () => {
+describe("Authentication & User Account Tests", () => {
 	beforeAll(async () => {
 		await connectDB();
 	});
@@ -48,7 +48,7 @@ describe.skip("Authentication & User Account Tests", () => {
 
 			expect(res.statusCode).toEqual(statusCode.CREATED);
 			expect(res.body).toHaveProperty("newUser");
-			expect(res.body.message).toEqual("User registered successfully.");
+			expect(res.body.message).toEqual("Registration successfully.");
 		});
 
 		// trying to create an account with the same email as above
@@ -128,20 +128,18 @@ describe.skip("Authentication & User Account Tests", () => {
 			expect(loginResponse.statusCode).toEqual(statusCode.OK);
 			expect(loginResponse.body.message).toEqual("Logged in successfully.");
 
-			// tries to login a second time with the same credentials
+			// tries to login a second time with the same credentials, it should work fine as it is just updating the session
 			const { loginResponse: loginResponse2 } = await loginUserGetToken();
-			expect(loginResponse2.statusCode).toEqual(statusCode.CONFLICT);
-			expect(loginResponse2.body.message).toEqual("You are already logged in.");
+			expect(loginResponse2.statusCode).toEqual(statusCode.OK);
+			expect(loginResponse2.body.message).toEqual("Logged in successfully.");
 		});
 
 		// login successfully
 		it("should login the user", async () => {
-			const { loginResponse, sessionToken } = await loginUserGetToken();
+			const { loginResponse, user } = await loginUserGetToken();
 
 			expect(loginResponse.statusCode).toEqual(statusCode.OK);
-			expect(loginResponse.body.sessionToken).toEqual(
-				sessionToken.data?._id.toString()
-			);
+			expect(loginResponse.body.userId).toEqual(user._id.toString());
 			expect(loginResponse.body.message).toEqual("Logged in successfully.");
 		});
 	});
