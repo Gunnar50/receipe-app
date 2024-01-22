@@ -90,7 +90,7 @@ npm test
 To run a specific test you can run (change the folder and test name):
 
 ```
-npm test -- server/__test__/auth.test.ts
+npm test -- server/__tests__/auth.test.ts
 ```
 
 ## ⭐️ Show your support
