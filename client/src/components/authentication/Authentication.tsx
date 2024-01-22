@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { login } from "../../redux/authSlice";
 import { setContent } from "../../redux/toastSlice";
 import API from "../../utils/api";
+import Input from "./Input";
 
 export function Auth() {
 	return (
@@ -17,7 +18,7 @@ export function Auth() {
 
 function Login() {
 	const [email, setEmail] = useState("test@test.com");
-	const [password, setPassword] = useState("password123");
+	const [password, setPassword] = useState("password");
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
@@ -69,7 +70,7 @@ function Login() {
 }
 
 function Register() {
-	const [email, setEmail] = useState("test1@test.com");
+	const [email, setEmail] = useState("test@test.com");
 	const [password, setPassword] = useState("password");
 	const [username, setUsername] = useState("test");
 	const navigate = useNavigate();
@@ -86,7 +87,7 @@ function Register() {
 			});
 			console.log("response", response);
 
-			dispatch(setContent({ text: "Register Successfully", type: "success" }));
+			dispatch(setContent({ text: response.data.message, type: "success" }));
 			navigate("/");
 		} catch (error: unknown) {
 			if (axios.isAxiosError(error)) {
@@ -145,36 +146,17 @@ function Form({
 		<form onSubmit={onSubmit}>
 			<h2 className="text-xl font-semibold mb-3">{label}</h2>
 			{/* EMAIL */}
-			<div className="mb-4">
-				<input
-					className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-					type="text"
-					placeholder="Email"
-					value={email}
-					onChange={(event) => setEmail(event.target.value)}
-				/>
-			</div>
+			<Input placeholder="Email" value={email} setValue={setEmail} />
+
 			{/* PASSWORD */}
-			<div className="mb-4">
-				<input
-					className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-					type="password"
-					placeholder="Password"
-					value={password}
-					onChange={(event) => setPassword(event.target.value)}
-				/>
-			</div>
+			<Input placeholder="Password" value={password} setValue={setPassword} />
+
+			{/* USERNAME */}
 			{username !== undefined && setUsername !== undefined && (
-				<div className="mb-4">
-					<input
-						className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-						type="text"
-						placeholder="Username"
-						value={username}
-						onChange={(event) => setUsername(event.target.value)}
-					/>
-				</div>
+				<Input placeholder="Username" value={username} setValue={setUsername} />
 			)}
+
+			{/* SUBMIT BUTTON */}
 			<button
 				className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-500 transition-all"
 				type="submit"
