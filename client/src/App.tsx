@@ -3,7 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
-import { Auth } from "./components/authentication/Authentication";
+import Authentication from "./components/authentication/Authentication";
+import Login from "./components/authentication/Login";
+import Register from "./components/authentication/Register";
 import { selectUser, validateSession } from "./redux/authSlice";
 import { selectContent, setContent } from "./redux/toastSlice";
 import API from "./utils/api";
@@ -44,7 +46,10 @@ function App() {
 	return (
 		<div>
 			<ToastContainer />
-			<Auth />
+			<div className="flex justify-center mt-4">
+				<Login />
+				<Register />
+			</div>
 		</div>
 	);
 }
