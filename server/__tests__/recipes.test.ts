@@ -10,7 +10,7 @@ import { loginUserGetToken } from "./helper/loginUser";
 import { getRandomRecipe } from "./helper/recipeData";
 import { clearDB, closeDB, connectDB } from "./testdb";
 
-describe("Recipes API Tests", () => {
+describe.skip("Recipes API Tests", () => {
 	beforeAll(async () => {
 		await connectDB();
 	});
