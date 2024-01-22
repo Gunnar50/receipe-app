@@ -189,7 +189,7 @@ export async function signUpUser(req: express.Request, res: express.Response) {
 	}
 
 	return res.status(statusCode.CREATED).send({
-		message: "User registered successfully.",
+		message: "Registration successfully.",
 		newUser: newUser.data,
 	});
 }
