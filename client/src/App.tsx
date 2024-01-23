@@ -1,11 +1,13 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Route, Routes } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
-import Authentication from "./components/authentication/Authentication";
+import Navbar from "./components/Nav/Navbar";
 import Login from "./components/authentication/Login";
 import Register from "./components/authentication/Register";
+import Home from "./pages/home";
 import { selectUser, validateSession } from "./redux/authSlice";
 import { selectContent, setContent } from "./redux/toastSlice";
 import API from "./utils/api";
@@ -42,15 +44,24 @@ function App() {
 			}
 		};
 		validateUserSession();
-	}, [dispatch]);
+	}, [user]);
 	return (
-		<div>
+		<>
 			<ToastContainer />
-			<div className="flex justify-center mt-4">
-				<Login />
-				<Register />
-			</div>
-		</div>
+			<Navbar />
+			<Routes>
+				<Route path="/" element={<Home />} />
+				<Route
+					path="/auth"
+					element={
+						<div className="flex justify-center mt-4">
+							<Login />
+							<Register />
+						</div>
+					}
+				/>
+			</Routes>
+		</>
 	);
 }
 
