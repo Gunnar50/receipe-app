@@ -88,7 +88,6 @@ export async function loginUser(req: express.Request, res: express.Response) {
 		{
 			domain: "localhost",
 			path: "/",
-			expires: sessionExpireDate,
 			httpOnly: true, // cookie only sent in http requests
 		}
 	);
