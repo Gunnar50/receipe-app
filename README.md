@@ -17,7 +17,7 @@ The project is a Recipe App, designed to allow users to contribute their own rec
 - React
 - Redux
 - TypeScript
-- TailwindCSS
+- MantineUI
 
 **Back end:**
 
