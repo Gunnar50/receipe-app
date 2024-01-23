@@ -17,6 +17,6 @@ router.get(
 	isOwner,
 	validateSession
 );
-router.post("/logout/:userId", isAuthenticated, isOwner, logoutUser);
+router.get("/logout/:userId", isAuthenticated, isOwner, logoutUser);
 
 export default router;
