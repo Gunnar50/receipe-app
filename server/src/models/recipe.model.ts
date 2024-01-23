@@ -11,6 +11,7 @@ export type RecipeType = {
 	updated?: Date;
 	owner: mongoose.Types.ObjectId;
 	likes: number;
+	serves: number;
 	createdAt: Date;
 };
 
@@ -29,6 +30,7 @@ const RecipeSchema = new mongoose.Schema({
 		require: true,
 	},
 	likes: { type: Number, default: 0 },
+	serves: { type: Number, required: "Number of servings is required" },
 	createdAt: { type: Date, default: Date.now },
 });
 
