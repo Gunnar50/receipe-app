@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./App.css";
-import Navbar from "./components/Nav/Navbar";
-import Login from "./components/authentication/Login";
-import Register from "./components/authentication/Register";
+import HeaderMenu from "./components/Nav/HeaderMenu";
+// import Navbar from "./components/Nav/Navbar";
+import { AuthenticationForm } from "./components/authentication/AuthForm";
 import Home from "./pages/home";
+import NotFoundPage from "./pages/notFound/NotFound";
 import { selectUser, validateSession } from "./redux/authSlice";
 import { selectContent, setContent } from "./redux/toastSlice";
 import API from "./utils/api";
@@ -48,18 +48,11 @@ function App() {
 	return (
 		<>
 			<ToastContainer />
-			<Navbar />
+			<HeaderMenu />
 			<Routes>
 				<Route path="/" element={<Home />} />
-				<Route
-					path="/auth"
-					element={
-						<div className="flex justify-center mt-4">
-							<Login />
-							<Register />
-						</div>
-					}
-				/>
+				<Route path="/auth/:type" element={<AuthenticationForm />} />
+				<Route path="*" element={<NotFoundPage />} />
 			</Routes>
 		</>
 	);
