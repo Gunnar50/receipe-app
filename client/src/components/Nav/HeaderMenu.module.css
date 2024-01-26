@@ -18,10 +18,10 @@
 	font-size: var(--mantine-font-size-sm);
 	transition: all 200ms ease-in-out;
 
-	@media (max-width: $mantine-breakpoint-xs) {
+	/* @media (max-width: $mantine-breakpoint-xs) {
 		height: rem(42px);
 		width: 100%;
-	}
+	} */
 
 	@mixin hover {
 		background-color: light-dark(
