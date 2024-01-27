@@ -1,5 +1,6 @@
+import { Grid } from "@mantine/core";
 import { useEffect, useState } from "react";
-import RecipeCard from "../components/RecipeCard";
+import RecipeCard from "../components/Card/RecipeCard";
 import API from "../utils/api";
 
 export interface Recipe {
@@ -27,13 +28,18 @@ function Home() {
 		}
 		getRecipes();
 	}, []);
+
 	if (!recipes.length) "Loading...";
 	return (
-		<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-			{recipes.map((recipe) => (
-				<RecipeCard key={recipe._id} recipe={recipe} />
-			))}
-		</div>
+		<>
+			<Grid>
+				{recipes.map((recipe) => (
+					<Grid.Col span={{ base: 12, xs: 4 }}>
+						<RecipeCard key={recipe._id} recipe={recipe} />
+					</Grid.Col>
+				))}
+			</Grid>
+		</>
 	);
 }
 
