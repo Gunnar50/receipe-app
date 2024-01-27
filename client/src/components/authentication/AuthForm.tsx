@@ -23,7 +23,7 @@ import { setContent } from "../../redux/toastSlice";
 import API from "../../utils/api";
 import { loginSchema, signupSchema } from "../../utils/zod";
 
-export function AuthenticationForm(props: PaperProps) {
+function AuthenticationForm(props: PaperProps) {
 	const { type: initialType } = useParams();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -32,8 +32,8 @@ export function AuthenticationForm(props: PaperProps) {
 	const form = useForm({
 		initialValues: {
 			username: "",
-			email: "",
-			password: "",
+			email: "test@test.com",
+			password: "password",
 		},
 
 		validate: zodResolver(type === "register" ? signupSchema : loginSchema),
@@ -183,3 +183,5 @@ export function AuthenticationForm(props: PaperProps) {
 		</Container>
 	);
 }
+
+export default AuthenticationForm;

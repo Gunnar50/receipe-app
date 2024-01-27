@@ -3,14 +3,13 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface UserState {
 	userId: string;
 	username: string;
+	image: string | null;
 }
 
 export interface AuthState {
 	isAuth: boolean;
 	user: UserState | null;
 }
-
-// const storedState = getLocalStore<AuthState>("auth");
 
 const initialState: AuthState = {
 	isAuth: false,
