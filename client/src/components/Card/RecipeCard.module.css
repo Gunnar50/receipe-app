@@ -4,6 +4,22 @@
 
 .title {
 	font-family: Greycliff CF, var(--mantine-font-family);
+	font-size: 1.2em;
+}
+
+.imageContainer {
+	overflow: hidden;
+}
+
+.img {
+	transition: all 500ms ease;
+	&:hover {
+		scale: 1.04;
+	}
+}
+.content {
+	z-index: 2;
+	background-color: var(--mantine-color-body);
 }
 
 .footer {
