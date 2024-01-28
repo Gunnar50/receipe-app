@@ -12,6 +12,7 @@ export type RecipeType = {
 	owner: mongoose.Types.ObjectId;
 	likes: number;
 	serves: number;
+	category: string;
 	createdAt: Date;
 };
 
@@ -31,6 +32,10 @@ const RecipeSchema = new mongoose.Schema({
 	},
 	likes: { type: Number, default: 0 },
 	serves: { type: Number, required: "Number of servings is required" },
+	category: {
+		type: String,
+		required: "Category is required. (Cakes, Pastry, Pasta...)",
+	},
 	createdAt: { type: Date, default: Date.now },
 });
 
