@@ -23,7 +23,7 @@ import { setContent } from "../redux/toastSlice";
 import API from "../utils/api";
 import { loginSchema, signupSchema } from "../utils/zod";
 
-function CreateRecipe(props: PaperProps) {
+function CreateRecipe() {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const [type, toggle] = useToggle(["login", "register"]);
@@ -55,7 +55,7 @@ function CreateRecipe(props: PaperProps) {
 		}
 	}
 
-	async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
+	async function handleCreate(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault();
 		form.validate();
 
@@ -83,100 +83,86 @@ function CreateRecipe(props: PaperProps) {
 	}
 
 	return (
-		<Container size={450} my={40}>
-			<Paper radius="md" shadow="md" p="xl" withBorder {...props}>
-				<Text size="lg" fw={500}>
-					Welcome to RecipesApp, please {type}!
-				</Text>
+		<Paper>
+			<Divider labelPosition="center" mb="lg" />
 
-				<Divider labelPosition="center" my="lg" />
+			<form onSubmit={(e) => handleCreate(e)}>
+				<Stack>
+					<TextInput
+						required
+						placeholder="Title"
+						value={form.values.title}
+						onChange={(event) =>
+							form.setFieldValue("title", event.currentTarget.value)
+						}
+						radius="md"
+					/>
 
-				<form onSubmit={(e) => handleLogin(e)}>
-					<Stack>
-						<TextInput
-							required
-							placeholder="Title"
-							value={form.values.title}
-							onChange={(event) =>
-								form.setFieldValue("title", event.currentTarget.value)
-							}
-							radius="md"
-						/>
+					<TextInput
+						required
+						placeholder="Description"
+						value={form.values.description}
+						onChange={(event) =>
+							form.setFieldValue("description", event.currentTarget.value)
+						}
+						error={form.errors.email && "Invalid email"}
+						radius="md"
+					/>
 
-						<TextInput
-							required
-							placeholder="Description"
-							value={form.values.description}
-							onChange={(event) =>
-								form.setFieldValue("description", event.currentTarget.value)
-							}
-							error={form.errors.email && "Invalid email"}
-							radius="md"
-						/>
+					<TextInput
+						required
+						placeholder="Ingredients"
+						value={form.values.ingredients}
+						onChange={(event) =>
+							form.setFieldValue("ingredients", event.currentTarget.value)
+						}
+						error={
+							form.errors.password &&
+							"Password should include at least 6 characters"
+						}
+						radius="md"
+					/>
+					<NumberInput
+						required
+						placeholder="Don't enter more than 20 and less than 10"
+						value={form.values.serves}
+						onChange={(event) =>
+							form.setFieldValue("serves", event.currentTarget.value)
+						}
+						error={form.errors.email && "Invalid email"}
+						radius="md"
+					/>
+					<NumberInput
+						required
+						value={form.values.cookingTime}
+						onChange={(event) =>
+							form.setFieldValue("cookingTime", event.currentTarget.value)
+						}
+						error={form.errors.email && "Invalid email"}
+						radius="md"
+					/>
+					<TextInput
+						required
+						placeholder="Image"
+						value={form.values.image}
+						onChange={(event) =>
+							form.setFieldValue("image", event.currentTarget.value)
+						}
+						error={form.errors.email && "Invalid email"}
+						radius="md"
+					/>
+				</Stack>
 
-						<TextInput
-							required
-							placeholder="Ingredients"
-							value={form.values.ingredients}
-							onChange={(event) =>
-								form.setFieldValue("ingredients", event.currentTarget.value)
-							}
-							error={
-								form.errors.password &&
-								"Password should include at least 6 characters"
-							}
-							radius="md"
-						/>
-						<NumberInput
-							required
-							placeholder="Don't enter more than 20 and less than 10"
-							value={form.values.serves}
-							onChange={(event) =>
-								form.setFieldValue("serves", event.currentTarget.value)
-							}
-							error={form.errors.email && "Invalid email"}
-							radius="md"
-						/>
-						<NumberInput
-							required
-							value={form.values.cookingTime}
-							onChange={(event) =>
-								form.setFieldValue("cookingTime", event.currentTarget.value)
-							}
-							error={form.errors.email && "Invalid email"}
-							radius="md"
-						/>
-						<TextInput
-							required
-							placeholder="Image"
-							value={form.values.image}
-							onChange={(event) =>
-								form.setFieldValue("image", event.currentTarget.value)
-							}
-							error={form.errors.email && "Invalid email"}
-							radius="md"
-						/>
-					</Stack>
-
-					<Group justify="space-between" mt="xl">
-						<Anchor
-							component="button"
-							type="button"
-							c="dimmed"
-							onClick={() => toggle()}
-							size="xs"
-						>
-							{type === "register"
-								? "Already have an account? Login"
-								: "Don't have an account? Register"}
-						</Anchor>
-						<Button type="submit" radius="xl">
-							{upperFirst(type)}
-						</Button>
-					</Group>
-				</form>
-			</Paper>
-		</Container>
+				<Group mt="xl">
+					<Button type="submit" radius="xl">
+						Create
+					</Button>
+					<Button radius="xl" color="red">
+						Clear
+					</Button>
+				</Group>
+			</form>
+		</Paper>
 	);
 }
 export default CreateRecipe;
