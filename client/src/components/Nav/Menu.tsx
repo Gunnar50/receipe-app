@@ -1,10 +1,7 @@
 import {
 	Avatar,
-	Burger,
-	Container,
 	Group,
 	Menu,
-	Tabs,
 	Text,
 	UnstyledButton,
 	rem,
@@ -17,11 +14,8 @@ import {
 	IconList,
 	IconLogout,
 	IconMessage,
-	IconPlayerPause,
 	IconSettings,
 	IconStar,
-	IconSwitchHorizontal,
-	IconTrash,
 	IconUserFilled,
 } from "@tabler/icons-react";
 import cx from "clsx";
@@ -39,10 +33,11 @@ const user = {
 };
 
 interface HeaderMenu {
+	openCreateRecipe: () => void;
 	handleLogout: () => void;
 }
 
-function HeaderMenu({ handleLogout }: HeaderMenu) {
+function HeaderMenu({ openCreateRecipe, handleLogout }: HeaderMenu) {
 	const theme = useMantineTheme();
 	const navigate = useNavigate();
 	const [userMenuOpened, setUserMenuOpened] = useState(false);
@@ -86,7 +81,7 @@ function HeaderMenu({ handleLogout }: HeaderMenu) {
 			</Menu.Target>
 			<Menu.Dropdown>
 				<Menu.Item
-					onClick={() => navigate("/create-recipe")}
+					onClick={openCreateRecipe}
 					leftSection={
 						<IconCirclePlus
 							style={{ width: rem(16), height: rem(16) }}
