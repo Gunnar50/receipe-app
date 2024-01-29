@@ -10,9 +10,10 @@ export interface Recipe {
 	description: string;
 	serves: number;
 	cookingTime: number;
-	ownerId: string;
+	owner: { username: string; _id: string };
 	likes: number;
 	image: string;
+	category: string;
 }
 
 function Home() {
@@ -34,8 +35,8 @@ function Home() {
 		<>
 			<Grid>
 				{recipes.map((recipe) => (
-					<Grid.Col span={{ base: 12, xs: 4 }}>
-						<RecipeCard key={recipe._id} recipe={recipe} />
+					<Grid.Col key={recipe._id} span={{ base: 12, xs: 4 }}>
+						<RecipeCard recipe={recipe} />
 					</Grid.Col>
 				))}
 			</Grid>
