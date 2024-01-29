@@ -4,12 +4,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import RecipeCard from "./components/Card/RecipeCard";
 import Nav from "./components/Nav/Nav";
-import AuthenticationForm from "./components/authentication/AuthForm";
-import CreateRecipe from "./pages/CreateRecipe";
 import Home from "./pages/Home";
 import NotFoundPage from "./pages/NotFound/NotFound";
-import { selectUser, validateSession } from "./redux/authSlice";
+import RecipeDetail from "./pages/RecipeDetail";
+import {
+	selectIsAuthenticated,
+	selectUser,
+	validateSession,
+} from "./redux/authSlice";
 import { selectContent, setContent } from "./redux/toastSlice";
 import API from "./utils/api";
 
@@ -17,6 +21,7 @@ function App() {
 	const dispatch = useDispatch();
 	const toastContent = useSelector(selectContent);
 	const user = useSelector(selectUser);
+	const isAuthenticated = useSelector(selectIsAuthenticated);
 
 	useEffect(() => {
 		if (toastContent.text) {
@@ -31,6 +36,7 @@ function App() {
 	}, [toastContent]);
 
 	useEffect(() => {
+		if (!isAuthenticated) return;
 		const validateUserSession = async () => {
 			try {
 				const response = await API.get(
@@ -38,12 +44,11 @@ function App() {
 				);
 				dispatch(validateSession(response.data.isValid));
 			} catch (error) {
-				console.log(error);
 				dispatch(validateSession(false));
 			}
 		};
 		validateUserSession();
-	}, [user]);
+	}, [user, isAuthenticated]);
 	return (
 		<>
 			<ToastContainer />
@@ -51,8 +56,9 @@ function App() {
 			<Container my="md">
 				<Routes>
 					<Route path="/" element={<Home />} />
-					<Route path="/auth/:type" element={<AuthenticationForm />} />
-					<Route path="/create-recipe" element={<CreateRecipe />} />
+					<Route path="/recipe/:recipeId" element={<RecipeDetail />} />
+					{/* <Route path="/auth/:type" element={<AuthenticationForm />} /> */}
+					{/* <Route path="/create-recipe" /> */}
 					<Route path="*" element={<NotFoundPage />} />
 				</Routes>
 			</Container>
