@@ -16,6 +16,7 @@ import {
 	IconShare,
 	IconUsers,
 } from "@tabler/icons-react";
+import { Link } from "react-router-dom";
 import { Recipe } from "../../pages/Home";
 import classes from "./RecipeCard.module.css";
 interface RecipeCardProps {
@@ -28,14 +29,14 @@ function RecipeCard({ recipe }: RecipeCardProps) {
 	return (
 		<Card withBorder padding="lg" radius="md" className={classes.card}>
 			<Card.Section>
-				<a href="#" className={classes.imageContainer}>
+				<Link to={`/recipe/${recipe._id}`} className={classes.imageContainer}>
 					<Image
 						className={classes.img}
 						src={recipe.image}
 						alt={recipe.title}
 						height={180}
 					/>
-				</a>
+				</Link>
 			</Card.Section>
 
 			<Card.Section className={classes.content} p="lg">
@@ -60,7 +61,8 @@ function RecipeCard({ recipe }: RecipeCardProps) {
 				<Group mt="md">
 					<div>
 						<Text fz="xs" c="dimmed">
-							Created by: Test
+							Created by:{" "}
+							{recipe.owner?.username ? recipe.owner.username : "Unknown"}
 						</Text>
 					</div>
 				</Group>
