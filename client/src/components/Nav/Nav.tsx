@@ -2,7 +2,6 @@ import { Button, Group } from "@mantine/core";
 import { useDisclosure, useToggle } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import CreateRecipe from "../../pages/CreateRecipe";
 import {
 	logout,
 	selectIsAuthenticated,
@@ -10,6 +9,7 @@ import {
 } from "../../redux/authSlice";
 import { setContent } from "../../redux/toastSlice";
 import API from "../../utils/api";
+import CreateRecipe from "../CreateRecipe";
 import AuthenticationForm from "../authentication/AuthForm";
 import CustomModal from "./CustomModal";
 import classes from "./HeaderMenu.module.css";
