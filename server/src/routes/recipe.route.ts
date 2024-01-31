@@ -33,7 +33,6 @@ router.get(
 );
 
 // get a single recipe by id
-// using for testing purposes only, to verify a specific recipe exists
 router.get("/get-recipe/:id", getSingleRecipe);
 
 // update/delete - takes user id first then recipe id
