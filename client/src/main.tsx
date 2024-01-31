@@ -11,7 +11,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 	<BrowserRouter>
 		<Provider store={store}>
 			<PersistGate persistor={persistor}>
-				<MantineProvider defaultColorScheme="dark">
+				<MantineProvider defaultColorScheme="light">
 					<App />
 				</MantineProvider>
 			</PersistGate>
