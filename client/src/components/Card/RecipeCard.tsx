@@ -27,7 +27,13 @@ function RecipeCard({ recipe }: RecipeCardProps) {
 	const theme = useMantineTheme();
 
 	return (
-		<Card withBorder padding="lg" radius="md" className={classes.card}>
+		<Card
+			// withBorder
+			padding="md"
+			radius="md"
+			shadow="xl"
+			className={classes.card}
+		>
 			<Card.Section>
 				<Link to={`/recipe/${recipe._id}`} className={classes.imageContainer}>
 					<Image
@@ -39,7 +45,7 @@ function RecipeCard({ recipe }: RecipeCardProps) {
 				</Link>
 			</Card.Section>
 
-			<Card.Section className={classes.content} p="lg">
+			<Card.Section className={classes.content} p="md">
 				<Badge w="fit-content" variant="light">
 					pastry
 				</Badge>
@@ -50,7 +56,7 @@ function RecipeCard({ recipe }: RecipeCardProps) {
 
 				<Group gap="xs">
 					<IconUsers stroke={1.5} size={18} />
-					<Text fw={400}>{recipe.serves} 2 servings</Text>
+					<Text fw={400}>{recipe.serves} servings</Text>
 				</Group>
 
 				<Group gap="xs">
