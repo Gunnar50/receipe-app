@@ -1,6 +1,5 @@
 import {
 	ActionIcon,
-	Avatar,
 	Badge,
 	Card,
 	Group,
