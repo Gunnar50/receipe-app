@@ -9,25 +9,17 @@ import {
 } from "../../redux/authSlice";
 import { setContent } from "../../redux/toastSlice";
 import API from "../../utils/api";
-import CreateRecipe from "../CreateRecipe";
-import AuthenticationForm from "../authentication/AuthForm";
-import CustomModal from "./CustomModal";
 import classes from "./HeaderMenu.module.css";
 import HeaderMenu from "./Menu";
 
-type AuthType = "login" | "register";
+interface NavProps {
+	triggerModal: (type: "login" | "register") => void;
+}
 
-function Nav() {
+function Nav({ triggerModal }: NavProps) {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const [type, toggle] = useToggle<AuthType>(["login", "register"]);
 	const isAuthenticated = useSelector(selectIsAuthenticated);
-	const [openedAuth, { open: openAuth, close: closeAuth }] =
-		useDisclosure(false);
-	const [
-		openedCreateRecipe,
-		{ open: openCreateRecipe, close: closeCreateRecipe },
-	] = useDisclosure(false);
 	const user = useSelector(selectUser);
 
 	async function handleLogout() {
@@ -42,7 +34,7 @@ function Nav() {
 						type: "success",
 					})
 				);
-				navigate("/auth/login");
+				navigate("/");
 			}
 		} catch (error) {
 			console.log(error);
@@ -58,25 +50,6 @@ function Nav() {
 	return (
 		<>
 			<header className={classes.header}>
-				<CustomModal
-					title={`Welcome to RecipesApp, please ${type}`}
-					opened={openedAuth}
-					close={closeAuth}
-				>
-					<AuthenticationForm
-						type={type}
-						toggleType={toggle}
-						closeModal={closeAuth}
-					/>
-				</CustomModal>
-				<CustomModal
-					title="Create a new Recipe!"
-					opened={openedCreateRecipe}
-					close={closeCreateRecipe}
-				>
-					<CreateRecipe />
-				</CustomModal>
-
 				<Group h="100%" maw="40rem" m="auto">
 					<Group h="100%" justify="space-between" gap={0} w="100%">
 						<Link to="/" className={classes.link}>
@@ -84,29 +57,20 @@ function Nav() {
 						</Link>
 						{isAuthenticated ? (
 							<>
-								<HeaderMenu
-									openCreateRecipe={openCreateRecipe}
-									handleLogout={handleLogout}
-								/>
+								<HeaderMenu handleLogout={handleLogout} />
 							</>
 						) : (
 							<Group>
 								<Button
 									className={classes.button}
 									variant="default"
-									onClick={() => {
-										toggle("login");
-										openAuth();
-									}}
+									onClick={() => triggerModal("login")}
 								>
 									Log in
 								</Button>
 								<Button
 									className={classes.button}
-									onClick={() => {
-										toggle("register");
-										openAuth();
-									}}
+									onClick={() => triggerModal("register")}
 								>
 									Sign up
 								</Button>
