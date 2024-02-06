@@ -25,6 +25,8 @@ interface AuthProps {
 	closeModal: () => void;
 }
 
+export type AuthType = "login" | "register";
+
 function AuthenticationForm({ closeModal, type, toggleType }: AuthProps) {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -69,7 +71,7 @@ function AuthenticationForm({ closeModal, type, toggleType }: AuthProps) {
 					type: "success",
 				})
 			);
-			navigate("/");
+			// navigate("/");
 			closeModal();
 		} catch (error: unknown) {
 			handleError(error);
@@ -98,7 +100,7 @@ function AuthenticationForm({ closeModal, type, toggleType }: AuthProps) {
 				login({ userId: newUser.userId, username: form.values.username })
 			);
 			dispatch(setContent({ text: message, type: "success" }));
-			navigate("/");
+			// navigate("/");
 		} catch (error: unknown) {
 			handleError(error);
 		}
