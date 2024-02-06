@@ -33,11 +33,10 @@ const user = {
 };
 
 interface HeaderMenu {
-	openCreateRecipe: () => void;
 	handleLogout: () => void;
 }
 
-function HeaderMenu({ openCreateRecipe, handleLogout }: HeaderMenu) {
+function HeaderMenu({ handleLogout }: HeaderMenu) {
 	const theme = useMantineTheme();
 	const navigate = useNavigate();
 	const [userMenuOpened, setUserMenuOpened] = useState(false);
@@ -81,7 +80,6 @@ function HeaderMenu({ openCreateRecipe, handleLogout }: HeaderMenu) {
 			</Menu.Target>
 			<Menu.Dropdown>
 				<Menu.Item
-					onClick={openCreateRecipe}
 					leftSection={
 						<IconCirclePlus
 							style={{ width: rem(16), height: rem(16) }}
