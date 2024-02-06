@@ -22,7 +22,11 @@ import API from "../utils/api";
 import { Recipe } from "./Home";
 import classes from "./RecipeDetails.module.css";
 
-function RecipeDetail() {
+interface RecipeProps {
+	triggerModal: (type: "login" | "register") => void;
+}
+
+function RecipeDetail({ triggerModal }: RecipeProps) {
 	const { recipeId } = useParams();
 	const isAuth = useSelector(selectIsAuthenticated);
 	const [recipe, setRecipe] = useState<Recipe | null>(null);
@@ -41,9 +45,15 @@ function RecipeDetail() {
 	}, [recipeId]);
 
 	function handleLike() {
-		if (!isAuth) console.log("no auth");
+		if (!isAuth) {
+			triggerModal("login");
+		}
 	}
-	function handleSave() {}
+	function handleSave() {
+		if (!isAuth) {
+			triggerModal("login");
+		}
+	}
 
 	if (!recipe) return "Loading...";
 	return (
