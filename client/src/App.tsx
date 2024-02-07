@@ -79,7 +79,7 @@ function App() {
 			<Nav triggerModal={triggerModal} />
 			<Container my="md">
 				<Routes>
-					<Route path="/" element={<Home />} />
+					<Route path="/" element={<Home triggerModal={triggerModal} />} />
 					<Route
 						path="/recipe/:recipeId"
 						element={<RecipeDetail triggerModal={triggerModal} />}
