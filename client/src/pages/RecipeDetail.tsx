@@ -1,8 +1,6 @@
 import {
-	Badge,
 	Box,
 	Button,
-	Card,
 	Divider,
 	Grid,
 	Group,
@@ -12,7 +10,9 @@ import {
 	Text,
 	Title,
 	rem,
+	useMantineTheme,
 } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import { IconBookmark, IconHeart } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -27,9 +27,12 @@ interface RecipeProps {
 }
 
 function RecipeDetail({ triggerModal }: RecipeProps) {
+	const theme = useMantineTheme();
 	const { recipeId } = useParams();
 	const isAuth = useSelector(selectIsAuthenticated);
 	const [recipe, setRecipe] = useState<Recipe | null>(null);
+
+	const isDesktop = useMediaQuery(`(min-width: ${theme.breakpoints.sm})`);
 
 	useEffect(() => {
 		const getRecipe = async () => {
@@ -73,7 +76,7 @@ function RecipeDetail({ triggerModal }: RecipeProps) {
 								<Title order={2}>{recipe.title}</Title>
 								<Group wrap="nowrap">
 									<Button
-										style={{ minWidth: "5rem" }}
+										style={isDesktop ? { minWidth: "5rem" } : {}}
 										variant="light"
 										color="red"
 										radius="md"
@@ -88,10 +91,10 @@ function RecipeDetail({ triggerModal }: RecipeProps) {
 											}}
 											stroke={1.5}
 										/>{" "}
-										Like
+										{isDesktop && "Like"}
 									</Button>
 									<Button
-										style={{ minWidth: "5rem" }}
+										style={isDesktop ? { minWidth: "5rem" } : {}}
 										variant="light"
 										color="blue"
 										size="xs"
@@ -106,7 +109,7 @@ function RecipeDetail({ triggerModal }: RecipeProps) {
 											}}
 											stroke={1.5}
 										/>{" "}
-										Save
+										{isDesktop && "Save"}
 									</Button>
 								</Group>
 							</Group>
