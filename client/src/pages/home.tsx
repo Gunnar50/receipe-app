@@ -16,7 +16,11 @@ export interface Recipe {
 	category: string;
 }
 
-function Home() {
+interface HomeProps {
+	triggerModal: (type: "login" | "register") => void;
+}
+
+function Home({ triggerModal }: HomeProps) {
 	const [recipes, setRecipes] = useState<Recipe[]>([]);
 	useEffect(() => {
 		async function getRecipes() {
@@ -36,7 +40,7 @@ function Home() {
 			<Grid>
 				{recipes.map((recipe) => (
 					<Grid.Col key={recipe._id} span={{ base: 12, xs: 4 }}>
-						<RecipeCard recipe={recipe} />
+						<RecipeCard recipe={recipe} triggerModal={triggerModal} />
 					</Grid.Col>
 				))}
 			</Grid>
