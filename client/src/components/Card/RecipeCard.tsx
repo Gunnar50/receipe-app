@@ -15,15 +15,38 @@ import {
 	IconShare,
 	IconUsers,
 } from "@tabler/icons-react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Recipe } from "../../pages/Home";
+import { selectIsAuthenticated } from "../../redux/authSlice";
 import classes from "./RecipeCard.module.css";
+
 interface RecipeCardProps {
 	recipe: Recipe;
+	triggerModal: (type: "login" | "register") => void;
 }
 
-function RecipeCard({ recipe }: RecipeCardProps) {
+function RecipeCard({ recipe, triggerModal }: RecipeCardProps) {
+	const isAuth = useSelector(selectIsAuthenticated);
 	const theme = useMantineTheme();
+
+	function handleLike() {
+		if (!isAuth) {
+			triggerModal("login");
+		}
+	}
+
+	function handleSave() {
+		if (!isAuth) {
+			triggerModal("login");
+		}
+	}
+
+	function handleShare() {
+		if (!isAuth) {
+			triggerModal("login");
+		}
+	}
 
 	return (
 		<Card
@@ -78,21 +101,21 @@ function RecipeCard({ recipe }: RecipeCardProps) {
 							{recipe.likes} people liked this
 						</Text>
 						<Group gap={0}>
-							<ActionIcon variant="subtle" color="gray">
+							<ActionIcon onClick={handleLike} variant="subtle" color="gray">
 								<IconHeart
 									style={{ width: rem(20), height: rem(20) }}
 									color={theme.colors.red[6]}
 									stroke={1.5}
 								/>
 							</ActionIcon>
-							<ActionIcon variant="subtle" color="gray">
+							<ActionIcon onClick={handleSave} variant="subtle" color="gray">
 								<IconBookmark
 									style={{ width: rem(20), height: rem(20) }}
 									color={theme.colors.yellow[6]}
 									stroke={1.5}
 								/>
 							</ActionIcon>
-							<ActionIcon variant="subtle" color="gray">
+							<ActionIcon onClick={handleShare} variant="subtle" color="gray">
 								<IconShare
 									style={{ width: rem(20), height: rem(20) }}
 									color={theme.colors.blue[6]}
