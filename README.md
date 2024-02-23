@@ -8,7 +8,7 @@ The project is a Recipe App, designed to allow users to contribute their own rec
   - login user when signing up
   - add logout feature
 - turn into a docker container
-- redo installation and setup in README.md
+- redo installation and setup to include docker in README.md
 
 ## 🛠️Technology Stack
 
