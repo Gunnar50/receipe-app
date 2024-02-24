@@ -52,6 +52,11 @@ export const getFavRecipes = (votedRecipes: mongoose.Types.ObjectId[]) =>
 		.populate("owner", "username")
 		.exec();
 
+export const getLikedRecipes = (likedRecipes: mongoose.Types.ObjectId[]) =>
+	RecipeModel.findById({ _id: { $in: likedRecipes } })
+		.populate("owner", "username")
+		.exec();
+
 export const getRecipesByUser = (id: string) =>
 	RecipeModel.find({ owner: id }).populate("owner", "username").exec();
 
