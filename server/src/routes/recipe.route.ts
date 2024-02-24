@@ -1,10 +1,5 @@
 import express from "express";
-import {
-	favouriteARecipe,
-	likeARecipe,
-	unfavouriteARecipe,
-	unlikeARecipe,
-} from "../controllers/likes.controller";
+import { likeARecipe, saveARecipe } from "../controllers/likes.controller";
 import {
 	createRecipe,
 	deleteRecipe,
@@ -40,8 +35,6 @@ router.put("/:userId/:recipeId", isAuthenticated, isOwner, updateRecipe);
 router.delete("/:userId/:recipeId", isAuthenticated, isOwner, deleteRecipe);
 
 router.post("/like/:userId", isAuthenticated, isOwner, likeARecipe);
-router.post("/unlike/:userId", isAuthenticated, isOwner, unlikeARecipe);
-router.post("/fav/:userId", isAuthenticated, isOwner, favouriteARecipe);
-router.post("/unfav/:userId", isAuthenticated, isOwner, unfavouriteARecipe);
+router.post("/save/:userId", isAuthenticated, isOwner, saveARecipe);
 
 export default router;
