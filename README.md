@@ -5,8 +5,9 @@ The project is a Recipe App, designed to allow users to contribute their own rec
 ## TODO
 
 - frontend:
-  - login user when signing up
-  - add logout feature
+
+  - add like and save recipes
+
 - turn into a docker container
 - redo installation and setup to include docker in README.md
 
