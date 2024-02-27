@@ -14,7 +14,7 @@ const UserSchema = new mongoose.Schema({
 	updated: { type: Date },
 	createdAt: { type: Date, default: Date.now },
 	likedRecipes: [{ type: mongoose.Schema.Types.ObjectId, ref: "recipes" }],
-	favRecipes: [{ type: mongoose.Schema.Types.ObjectId, ref: "recipes" }],
+	savedRecipes: [{ type: mongoose.Schema.Types.ObjectId, ref: "recipes" }],
 });
 
 export const UserModel = mongoose.model("users", UserSchema);
@@ -45,7 +45,7 @@ export const updateUserById = (
 
 export const removeRecipesFromUser = (id: string) => {
 	return UserModel.updateMany(
-		{ $or: [{ likedRecipes: id }, { favRecipes: id }] },
-		{ $pull: { likedRecipes: id, favRecipes: id } }
+		{ $or: [{ likedRecipes: id }, { savedRecipes: id }] },
+		{ $pull: { likedRecipes: id, savedRecipes: id } }
 	);
 };
