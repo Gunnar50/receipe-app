@@ -1,9 +1,5 @@
 import express from "express";
-import {
-	getFavRecipes,
-	getLikedRecipes,
-	getRecipeById,
-} from "../models/recipe.model";
+import { getRecipeById } from "../models/recipe.model";
 import { getUserById } from "../models/user.model";
 import { HTTP_STATUS as statusCode } from "../utils/httpStatus";
 import { tryPromise } from "../utils/inlineHandlers";
@@ -55,6 +51,7 @@ export async function likeARecipe(req: express.Request, res: express.Response) {
 
 	return res.status(statusCode.OK).send({
 		message,
+		recipe: recipe.data,
 	});
 }
 
@@ -70,104 +67,73 @@ export async function getLikedRecipesByUser(
 			message: "Error: Something went wrong while fetching the user.",
 		});
 	}
-	const likedRecipes = await tryPromise(getLikedRecipes(user.data.favRecipes));
-	if (likedRecipes.error) {
-		return res.status(statusCode.INTERNAL_SERVER_ERROR).send({
-			message: "Error: Something went wrong while getting the liked recipes.",
-		});
-	}
 
 	res.status(statusCode.OK).send({
-		likedRecipes: likedRecipes.data,
+		likedRecipes: user.data.likedRecipes,
 	});
 }
 
 export async function saveARecipe(req: express.Request, res: express.Response) {
-	try {
-		const { userId } = req.params;
-		const { recipeId } = req.body;
+	const { userId } = req.params;
+	const { recipeId } = req.body;
 
-		if (!recipeId) {
-			return res.status(statusCode.BAD_REQUEST).send({
-				message: "Error: Something is missing.",
-			});
-		}
-
-		const user = await getUserById(userId);
-		if (user.favRecipes.includes(recipeId)) {
-			return res.status(statusCode.BAD_REQUEST).send({
-				message: "Recipe is already in your favourites.",
-			});
-		}
-		user.favRecipes.push(recipeId);
-		await user.save();
-
-		res.status(statusCode.OK).send({
-			message: "Recipe added to favourites successfully",
-			favRecipes: user.favRecipes,
-		});
-	} catch (error) {
-		console.log(error);
-		return res.status(statusCode.INTERNAL_SERVER_ERROR).send({
-			message: "Error: Cannot get user recipe. Please try again later.",
+	// get the recipe
+	const recipe = await tryPromise(getRecipeById(recipeId));
+	if (recipe.error) {
+		return res.status(statusCode.BAD_REQUEST).send({
+			message: "Error: Something is missing.",
 		});
 	}
-}
 
-export async function unfavouriteARecipe(
-	req: express.Request,
-	res: express.Response
-) {
-	try {
-		const { userId } = req.params;
-		const { recipeId } = req.body;
+	// get the user
+	const user = await tryPromise(getUserById(userId));
+	if (user.error) {
+		return res.status(statusCode.INTERNAL_SERVER_ERROR).send({
+			message: "Error: Something went wrong while fetching the user.",
+		});
+	}
 
-		if (!recipeId) {
-			return res.status(statusCode.BAD_REQUEST).send({
-				message: "Error: Something is missing.",
-			});
-		}
-
-		const user = await getUserById(userId);
-		if (!user.favRecipes.includes(recipeId)) {
-			return res.status(statusCode.BAD_REQUEST).send({
-				message: "Recipe is not in your favourites.",
-			});
-		}
-		user.favRecipes = user.favRecipes.filter(
+	let message = "";
+	if (user.data.savedRecipes.includes(recipeId)) {
+		// user already like this recipe but wants to unlike it.
+		// unlike the recipe and remove from the liked list.
+		user.data.savedRecipes = user.data.savedRecipes.filter(
 			(item) => item.toString() !== recipeId
 		);
-		await user.save();
 
-		res.status(statusCode.OK).send({
-			message: "Recipe removed from favourites successfully",
-			favRecipes: user.favRecipes,
-		});
-	} catch (error) {
-		console.log(error);
-		return res.status(statusCode.INTERNAL_SERVER_ERROR).send({
-			message: "Error: Cannot get user recipe. Please try again later.",
-		});
+		await user.data.save();
+
+		message = "Recipe unsaved successfully.";
+	} else {
+		// user does not like the recipe and wish to like it.
+		// add the recipe to the liked list
+		user.data.savedRecipes.push(recipeId);
+
+		await user.data.save();
+
+		message = "Recipe saved successfully";
 	}
+
+	return res.status(statusCode.OK).send({
+		message,
+		recipe: recipe.data,
+	});
 }
 
 export async function getSavedRecipesByUser(
 	req: express.Request,
 	res: express.Response
 ) {
-	try {
-		const { userId } = req.params;
+	const { userId } = req.params;
 
-		const user = await getUserById(userId);
-		const favRecipes = await getFavRecipes(user.favRecipes);
-
-		res.status(statusCode.OK).send({
-			favRecipes,
-		});
-	} catch (error) {
-		console.log(error);
+	const user = await tryPromise(getUserById(userId));
+	if (user.error) {
 		return res.status(statusCode.INTERNAL_SERVER_ERROR).send({
-			message: "Error: Something went wrong.",
+			message: "Error: Something went wrong while fetching the user.",
 		});
 	}
+
+	res.status(statusCode.OK).send({
+		savedRecipes: user.data.savedRecipes,
+	});
 }
