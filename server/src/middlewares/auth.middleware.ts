@@ -18,7 +18,7 @@ export async function isAuthenticated(
 
 	if (!sessionToken) {
 		return res.status(statusCode.UNAUTHORIZED).send({
-			message: "Unathorized.",
+			message: "Unathorized. No session token provided.",
 		});
 	}
 
@@ -36,7 +36,7 @@ export async function isAuthenticated(
 	// if the error is null and the data is null
 	if (!currentSession.data) {
 		return res.status(statusCode.UNAUTHORIZED).send({
-			message: "Unathorized.",
+			message: "Unathorized. Something went wrong.",
 		});
 	}
 
