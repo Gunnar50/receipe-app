@@ -1,5 +1,10 @@
 import express from "express";
-import { likeARecipe, saveARecipe } from "../controllers/likes.controller";
+import {
+	getLikedRecipesByUser,
+	getSavedRecipesByUser,
+	likeARecipe,
+	saveARecipe,
+} from "../controllers/likes.controller";
 import {
 	createRecipe,
 	deleteRecipe,
@@ -35,6 +40,18 @@ router.put("/:userId/:recipeId", isAuthenticated, isOwner, updateRecipe);
 router.delete("/:userId/:recipeId", isAuthenticated, isOwner, deleteRecipe);
 
 router.post("/like/:userId", isAuthenticated, isOwner, likeARecipe);
+router.get(
+	"/get-liked/:userId",
+	isAuthenticated,
+	isOwner,
+	getLikedRecipesByUser
+);
 router.post("/save/:userId", isAuthenticated, isOwner, saveARecipe);
+router.get(
+	"/get-saved/:userId",
+	isAuthenticated,
+	isOwner,
+	getSavedRecipesByUser
+);
 
 export default router;
