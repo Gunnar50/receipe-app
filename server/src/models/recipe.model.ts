@@ -47,13 +47,13 @@ export const getRecipes = () =>
 export const getRecipeById = (id: string) =>
 	RecipeModel.findById(id).populate("owner", "username").exec();
 
-export const getFavRecipes = (votedRecipes: mongoose.Types.ObjectId[]) =>
-	RecipeModel.findById({ _id: { $in: votedRecipes } })
+export const getSavedRecipes = (votedRecipes: mongoose.Types.ObjectId[]) =>
+	RecipeModel.find({ _id: { $in: votedRecipes } })
 		.populate("owner", "username")
 		.exec();
 
 export const getLikedRecipes = (likedRecipes: mongoose.Types.ObjectId[]) =>
-	RecipeModel.findById({ _id: { $in: likedRecipes } })
+	RecipeModel.find({ _id: { $in: likedRecipes } })
 		.populate("owner", "username")
 		.exec();
 
