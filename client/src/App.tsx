@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import RecipeCard from "./components/Card/RecipeCard";
 import CustomModal from "./components/Nav/CustomModal";
 import Nav from "./components/Nav/Nav";
 import AuthenticationForm, {
@@ -75,7 +74,7 @@ function App() {
 					closeModal={closeAuth}
 				/>
 			</CustomModal>
-			<ToastContainer />
+			{/* <ToastContainer /> */}
 			<Nav triggerModal={triggerModal} />
 			<Container my="md">
 				<Routes>
