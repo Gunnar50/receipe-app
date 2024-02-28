@@ -13,7 +13,6 @@ import { upperFirst } from "@mantine/hooks";
 import axios from "axios";
 import { zodResolver } from "mantine-form-zod-resolver";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { login } from "../../redux/authSlice";
 import { setContent } from "../../redux/toastSlice";
 import API from "../../utils/api";
@@ -28,7 +27,6 @@ interface AuthProps {
 export type AuthType = "login" | "register";
 
 function AuthenticationForm({ closeModal, type, toggleType }: AuthProps) {
-	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
 	const form = useForm({
