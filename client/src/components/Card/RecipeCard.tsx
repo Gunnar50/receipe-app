@@ -5,6 +5,7 @@ import {
 	Group,
 	Image,
 	Text,
+	Tooltip,
 	rem,
 	useMantineTheme,
 } from "@mantine/core";
@@ -12,7 +13,6 @@ import {
 	IconBookmark,
 	IconClock,
 	IconHeart,
-	IconShare,
 	IconUsers,
 } from "@tabler/icons-react";
 import { useSelector } from "react-redux";
@@ -37,12 +37,6 @@ function RecipeCard({ recipe, triggerModal }: RecipeCardProps) {
 	}
 
 	function handleSave() {
-		if (!isAuth) {
-			triggerModal("login");
-		}
-	}
-
-	function handleShare() {
 		if (!isAuth) {
 			triggerModal("login");
 		}
@@ -101,27 +95,31 @@ function RecipeCard({ recipe, triggerModal }: RecipeCardProps) {
 							{recipe.likes} people liked this
 						</Text>
 						<Group gap={0}>
-							<ActionIcon onClick={handleLike} variant="subtle" color="gray">
-								<IconHeart
-									style={{ width: rem(20), height: rem(20) }}
-									color={theme.colors.red[6]}
-									stroke={1.5}
-								/>
-							</ActionIcon>
-							<ActionIcon onClick={handleSave} variant="subtle" color="gray">
-								<IconBookmark
-									style={{ width: rem(20), height: rem(20) }}
-									color={theme.colors.yellow[6]}
-									stroke={1.5}
-								/>
-							</ActionIcon>
-							<ActionIcon onClick={handleShare} variant="subtle" color="gray">
+							<Tooltip label="Like" withArrow>
+								<ActionIcon onClick={handleLike} variant="subtle" color="gray">
+									<IconHeart
+										style={{ width: rem(20), height: rem(20) }}
+										color={theme.colors.red[6]}
+										stroke={1.5}
+									/>
+								</ActionIcon>
+							</Tooltip>
+							<Tooltip label="Save" withArrow>
+								<ActionIcon onClick={handleSave} variant="subtle" color="gray">
+									<IconBookmark
+										style={{ width: rem(20), height: rem(20) }}
+										color={theme.colors.yellow[6]}
+										stroke={1.5}
+									/>
+								</ActionIcon>
+							</Tooltip>
+							{/* <ActionIcon onClick={handleShare} variant="subtle" color="gray">
 								<IconShare
 									style={{ width: rem(20), height: rem(20) }}
 									color={theme.colors.blue[6]}
 									stroke={1.5}
 								/>
-							</ActionIcon>
+							</ActionIcon>*/}
 						</Group>
 					</Group>
 				</Card.Section>
