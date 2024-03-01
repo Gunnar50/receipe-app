@@ -1,8 +1,10 @@
+import { ActionIcon, Tooltip } from "@mantine/core";
 import {
 	IconBookmark,
 	IconBookmarkFilled,
 	IconHeart,
 	IconHeartFilled,
+	TablerIconsProps,
 } from "@tabler/icons-react";
 import axios from "axios";
 import { useState } from "react";
@@ -13,18 +15,32 @@ import API from "../utils/api";
 function LikeSaveButton({
 	type,
 	recipeId,
-	icon,
 	setSelected,
+	Icon,
+	setIsRecipeLiked,
+	setIsRecipeSaved,
 }: {
-	type: "like" | "save";
+	type: "Like" | "Save";
 	recipeId: string;
-	icon: JSX.Element;
 	setSelected: boolean;
+	Icon: (props: TablerIconsProps) => JSX.Element;
+	setIsRecipeLiked: (value: boolean) => void;
+	setIsRecipeSaved: (value: boolean) => void;
 }) {
 	const isAuth = useSelector(selectIsAuthenticated);
 	const user = useSelector(selectUser);
 
-	return <div>LikeSaveButton</div>;
+	return (
+		<Tooltip label={type} withArrow>
+			<ActionIcon onClick={handleLike} variant="subtle" color="gray">
+				<Icon
+					style={{ width: rem(20), height: rem(20) }}
+					color={theme.colors.red[6]}
+					stroke={1.5}
+				/>
+			</ActionIcon>
+		</Tooltip>
+	);
 }
 
 export default LikeSaveButton;
