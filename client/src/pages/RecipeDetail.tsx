@@ -76,7 +76,7 @@ function RecipeDetail({ triggerModal }: RecipeProps) {
 	}, [recipeId]);
 
 	useEffect(() => {
-		async function getUserLikedRecipes(type: "liked" | "saved") {
+		async function getUserLikedSavedRecipes(type: "liked" | "saved") {
 			if (!isAuth) {
 				return;
 			}
@@ -92,8 +92,8 @@ function RecipeDetail({ triggerModal }: RecipeProps) {
 				console.log(err);
 			}
 		}
-		getUserLikedRecipes("liked");
-		getUserLikedRecipes("saved");
+		getUserLikedSavedRecipes("liked");
+		getUserLikedSavedRecipes("saved");
 	}, [isAuth, user, recipeId]);
 
 	async function handleButtons(type: "like" | "save") {
@@ -155,7 +155,7 @@ function RecipeDetail({ triggerModal }: RecipeProps) {
 											}}
 											stroke={1.5}
 										/>{" "}
-										{isDesktop && isRecipeLiked ? "Unlike" : "Like"}
+										{isDesktop ? (isRecipeLiked ? "Unlike" : "Like") : ""}
 									</Button>
 									<Button
 										style={isDesktop ? { minWidth: "5rem" } : {}}
@@ -173,7 +173,7 @@ function RecipeDetail({ triggerModal }: RecipeProps) {
 											}}
 											stroke={1.5}
 										/>{" "}
-										{isDesktop && isRecipeSaved ? "Unsave" : "Save"}
+										{isDesktop ? (isRecipeSaved ? "Unsave" : "Save") : ""}
 									</Button>
 								</Group>
 							</Group>
