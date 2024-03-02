@@ -13,6 +13,7 @@ import { Recipe } from "../pages/Home";
 import { selectIsAuthenticated, selectUser } from "../redux/authSlice";
 import { setContent } from "../redux/toastSlice";
 import API from "../utils/api";
+import { handleError } from "../utils/handleError";
 
 function LikeSaveButton({
 	type,
