@@ -1,4 +1,4 @@
-import { ActionIcon, Tooltip } from "@mantine/core";
+import { ActionIcon, Tooltip, rem, useMantineTheme } from "@mantine/core";
 import {
 	IconBookmark,
 	IconBookmarkFilled,
@@ -8,31 +8,66 @@ import {
 } from "@tabler/icons-react";
 import axios from "axios";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { Recipe } from "../pages/Home";
 import { selectIsAuthenticated, selectUser } from "../redux/authSlice";
+import { setContent } from "../redux/toastSlice";
 import API from "../utils/api";
 
 function LikeSaveButton({
 	type,
 	recipeId,
+	selected,
 	setSelected,
 	Icon,
-	setIsRecipeLiked,
-	setIsRecipeSaved,
+
+	setRecipe,
+	triggerModal,
 }: {
 	type: "Like" | "Save";
 	recipeId: string;
-	setSelected: boolean;
+	selected: boolean;
+	setSelected: (value: boolean) => void;
 	Icon: (props: TablerIconsProps) => JSX.Element;
-	setIsRecipeLiked: (value: boolean) => void;
-	setIsRecipeSaved: (value: boolean) => void;
+	setRecipe: (value: Recipe | null) => void;
+	triggerModal: (type: "login" | "register") => void;
 }) {
+	const theme = useMantineTheme();
 	const isAuth = useSelector(selectIsAuthenticated);
+	const dispatch = useDispatch();
 	const user = useSelector(selectUser);
+
+	async function handleButtons() {
+		if (!isAuth) {
+			triggerModal("login");
+			return;
+		}
+		try {
+			const response = await API.post(
+				`/recipes/${type.toLocaleLowerCase()}/${user?.userId}`,
+				{
+					recipeId,
+				}
+			);
+			const { message, recipe } = response.data;
+
+			setSelected(!selected);
+			setRecipe(recipe);
+
+			dispatch(
+				setContent({
+					text: message,
+					type: "success",
+				})
+			);
+		} catch (error: unknown) {
+			handleError(error);
+		}
+	}
 
 	return (
 		<Tooltip label={type} withArrow>
-			<ActionIcon onClick={handleLike} variant="subtle" color="gray">
+			<ActionIcon onClick={handleButtons} variant="subtle" color="gray">
 				<Icon
 					style={{ width: rem(20), height: rem(20) }}
 					color={theme.colors.red[6]}
