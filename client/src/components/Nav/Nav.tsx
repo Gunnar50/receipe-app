@@ -1,5 +1,4 @@
 import { Button, Group } from "@mantine/core";
-import { useDisclosure, useToggle } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -34,7 +33,8 @@ function Nav({ triggerModal }: NavProps) {
 						type: "success",
 					})
 				);
-				navigate("/");
+				navigate("/", { replace: true });
+				window.location.reload();
 			}
 		} catch (error) {
 			console.log(error);
