@@ -41,14 +41,14 @@ router.delete("/:userId/:recipeId", isAuthenticated, isOwner, deleteRecipe);
 
 router.post("/like/:userId", isAuthenticated, isOwner, likeARecipe);
 router.get(
-	"/get-liked/:userId",
+	"/get-like/:userId",
 	isAuthenticated,
 	isOwner,
 	getLikedRecipesByUser
 );
 router.post("/save/:userId", isAuthenticated, isOwner, saveARecipe);
 router.get(
-	"/get-saved/:userId",
+	"/get-save/:userId",
 	isAuthenticated,
 	isOwner,
 	getSavedRecipesByUser
