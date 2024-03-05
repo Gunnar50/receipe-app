@@ -22,6 +22,18 @@ interface HomeProps {
 
 function Home({ triggerModal }: HomeProps) {
 	const [recipes, setRecipes] = useState<Recipe[]>([]);
+
+	function updateRecipeLikes(recipeId: string, newLikesCount: number) {
+		setRecipes((currentRecipes) =>
+			currentRecipes.map((recipe) => {
+				if (recipe._id === recipeId) {
+					return { ...recipe, likes: newLikesCount };
+				}
+				return recipe;
+			})
+		);
+	}
+
 	useEffect(() => {
 		async function getRecipes() {
 			try {
@@ -40,7 +52,11 @@ function Home({ triggerModal }: HomeProps) {
 			<Grid>
 				{recipes.map((recipe) => (
 					<Grid.Col key={recipe._id} span={{ base: 12, xs: 4 }}>
-						<RecipeCard recipe={recipe} triggerModal={triggerModal} />
+						<RecipeCard
+							recipe={recipe}
+							updateRecipeLikes={updateRecipeLikes}
+							triggerModal={triggerModal}
+						/>
 					</Grid.Col>
 				))}
 			</Grid>
