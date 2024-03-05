@@ -15,8 +15,8 @@ import classes from "./RecipeCard.module.css";
 
 interface RecipeCardProps {
 	recipe: Recipe;
-	triggerModal: (type: "login" | "register") => void;
-	updateRecipeLikes: (recipeId: string, newLikesCount: number) => void;
+	triggerModal?: (type: "login" | "register") => void;
+	updateRecipeLikes?: (recipeId: string, newLikesCount: number) => void;
 }
 
 function RecipeCard({
@@ -45,7 +45,7 @@ function RecipeCard({
 
 			<Card.Section className={classes.content} p="md">
 				<Badge w="fit-content" variant="light">
-					pastry
+					{recipe.category}
 				</Badge>
 
 				<Text fw={700} className={classes.title} mt="xs">
@@ -71,34 +71,36 @@ function RecipeCard({
 					</div>
 				</Group>
 
-				<Card.Section className={classes.footer}>
-					<Group justify="space-between">
-						<Text fz="xs" c="dimmed">
-							{recipe.likes} people liked this
-						</Text>
-						<Group gap={5}>
-							<LikeSaveButton
-								type="Like"
-								recipeId={recipe._id}
-								selected={isRecipeLiked}
-								setSelected={setIsRecipeLiked}
-								Icon={HeartIcon}
-								iconColor="red"
-								updateRecipeLikes={updateRecipeLikes}
-								triggerModal={triggerModal}
-							/>
-							<LikeSaveButton
-								type="Save"
-								recipeId={recipe._id}
-								selected={isRecipeSaved}
-								setSelected={setIsRecipeSaved}
-								Icon={BookmarkIcon}
-								updateRecipeLikes={updateRecipeLikes}
-								triggerModal={triggerModal}
-							/>
+				{updateRecipeLikes && triggerModal && (
+					<Card.Section className={classes.footer}>
+						<Group justify="space-between">
+							<Text fz="xs" c="dimmed">
+								{recipe.likes} people liked this
+							</Text>
+							<Group gap={5}>
+								<LikeSaveButton
+									type="Like"
+									recipeId={recipe._id}
+									selected={isRecipeLiked}
+									setSelected={setIsRecipeLiked}
+									Icon={HeartIcon}
+									iconColor="red"
+									updateRecipeLikes={updateRecipeLikes}
+									triggerModal={triggerModal}
+								/>
+								<LikeSaveButton
+									type="Save"
+									recipeId={recipe._id}
+									selected={isRecipeSaved}
+									setSelected={setIsRecipeSaved}
+									Icon={BookmarkIcon}
+									updateRecipeLikes={updateRecipeLikes}
+									triggerModal={triggerModal}
+								/>
+							</Group>
 						</Group>
-					</Group>
-				</Card.Section>
+					</Card.Section>
+				)}
 			</Card.Section>
 		</Card>
 	);
