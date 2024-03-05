@@ -1,15 +1,7 @@
-import { ActionIcon, Tooltip, rem, useMantineTheme } from "@mantine/core";
-import {
-	IconBookmark,
-	IconBookmarkFilled,
-	IconHeart,
-	IconHeartFilled,
-	TablerIconsProps,
-} from "@tabler/icons-react";
-import axios from "axios";
-import { useState } from "react";
+import { ActionIcon, Tooltip, rem } from "@mantine/core";
+import { TablerIconsProps } from "@tabler/icons-react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Recipe } from "../pages/Home";
 import { selectIsAuthenticated, selectUser } from "../redux/authSlice";
 import { setContent } from "../redux/toastSlice";
 import API from "../utils/api";
@@ -21,19 +13,19 @@ function LikeSaveButton({
 	selected,
 	setSelected,
 	Icon,
-
-	setRecipe,
+	iconColor,
+	updateRecipeLikes,
 	triggerModal,
 }: {
 	type: "Like" | "Save";
-	recipeId: string;
+	recipeId: string | undefined;
 	selected: boolean;
 	setSelected: (value: boolean) => void;
 	Icon: (props: TablerIconsProps) => JSX.Element;
-	setRecipe: (value: Recipe | null) => void;
+	iconColor?: string | undefined;
+	updateRecipeLikes: (recipeId: string, newLikesCount: number) => void;
 	triggerModal: (type: "login" | "register") => void;
 }) {
-	const theme = useMantineTheme();
 	const isAuth = useSelector(selectIsAuthenticated);
 	const dispatch = useDispatch();
 	const user = useSelector(selectUser);
@@ -53,7 +45,7 @@ function LikeSaveButton({
 			const { message, recipe } = response.data;
 
 			setSelected(!selected);
-			setRecipe(recipe);
+			updateRecipeLikes(recipe._id, recipe.likes);
 
 			dispatch(
 				setContent({
@@ -66,12 +58,36 @@ function LikeSaveButton({
 		}
 	}
 
+	useEffect(() => {
+		async function getUserLikedSavedRecipes() {
+			if (!isAuth) {
+				return;
+			}
+
+			try {
+				const response = await API.get(
+					`/recipes/get-${type.toLocaleLowerCase()}/${user?.userId}`
+				);
+				const recipes: string[] = response.data.likedRecipes;
+				if (recipeId && recipes) {
+					setSelected(recipes.includes(recipeId));
+				}
+			} catch (err) {
+				console.log(err);
+			}
+		}
+		getUserLikedSavedRecipes();
+	}, [isAuth, user, recipeId]);
+
 	return (
-		<Tooltip label={type} withArrow>
-			<ActionIcon onClick={handleButtons} variant="subtle" color="gray">
+		<Tooltip
+			label={!selected ? type : `Un${type.toLocaleLowerCase()}`}
+			withArrow
+		>
+			<ActionIcon onClick={handleButtons} variant="subtle" color={iconColor}>
 				<Icon
-					style={{ width: rem(20), height: rem(20) }}
-					color={theme.colors.red[6]}
+					style={{ width: rem(30), height: rem(30) }}
+					color={iconColor}
 					stroke={1.5}
 				/>
 			</ActionIcon>
