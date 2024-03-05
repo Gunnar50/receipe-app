@@ -68,7 +68,11 @@ function LikeSaveButton({
 				const response = await API.get(
 					`/recipes/get-${type.toLocaleLowerCase()}/${user?.userId}`
 				);
-				const recipes: string[] = response.data.likedRecipes;
+
+				const recipes: string[] =
+					type === "Like"
+						? response.data.likedRecipes
+						: response.data.savedRecipes;
 				if (recipeId && recipes) {
 					setSelected(recipes.includes(recipeId));
 				}
