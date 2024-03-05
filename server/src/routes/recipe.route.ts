@@ -1,7 +1,8 @@
 import express from "express";
 import {
 	getLikedRecipesByUser,
-	getSavedRecipesByUser,
+	getLikedRecipesIdByUser,
+	getSavedRecipesIdByUser,
 	likeARecipe,
 	saveARecipe,
 } from "../controllers/likes.controller";
@@ -44,14 +45,21 @@ router.get(
 	"/get-like/:userId",
 	isAuthenticated,
 	isOwner,
-	getLikedRecipesByUser
+	getLikedRecipesIdByUser
 );
 router.post("/save/:userId", isAuthenticated, isOwner, saveARecipe);
 router.get(
 	"/get-save/:userId",
 	isAuthenticated,
 	isOwner,
-	getSavedRecipesByUser
+	getSavedRecipesIdByUser
+);
+
+router.post(
+	"/liked-recipes/:userId",
+	isAuthenticated,
+	isOwner,
+	getLikedRecipesByUser
 );
 
 export default router;
