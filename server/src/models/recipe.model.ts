@@ -47,8 +47,8 @@ export const getRecipes = () =>
 export const getRecipeById = (id: string) =>
 	RecipeModel.findById(id).populate("owner", "username").exec();
 
-export const getSavedRecipes = (votedRecipes: mongoose.Types.ObjectId[]) =>
-	RecipeModel.find({ _id: { $in: votedRecipes } })
+export const getSavedRecipes = (savedRecipes: mongoose.Types.ObjectId[]) =>
+	RecipeModel.find({ _id: { $in: savedRecipes } })
 		.populate("owner", "username")
 		.exec();
 
