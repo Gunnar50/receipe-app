@@ -1,5 +1,5 @@
 import express from "express";
-import { getRecipeById } from "../models/recipe.model";
+import { getLikedRecipes, getRecipeById } from "../models/recipe.model";
 import { getUserById } from "../models/user.model";
 import { HTTP_STATUS as statusCode } from "../utils/httpStatus";
 import { tryPromise } from "../utils/inlineHandlers";
@@ -55,7 +55,7 @@ export async function likeARecipe(req: express.Request, res: express.Response) {
 	});
 }
 
-export async function getLikedRecipesByUser(
+export async function getLikedRecipesIdByUser(
 	req: express.Request,
 	res: express.Response
 ) {
@@ -70,6 +70,24 @@ export async function getLikedRecipesByUser(
 
 	res.status(statusCode.OK).send({
 		likedRecipes: user.data.likedRecipes,
+	});
+}
+
+export async function getLikedRecipesByUser(
+	req: express.Request,
+	res: express.Response
+) {
+	const { recipesIds } = req.body;
+
+	const recipes = await tryPromise(getLikedRecipes(recipesIds));
+	if (recipes.error) {
+		return res.status(statusCode.INTERNAL_SERVER_ERROR).send({
+			message: "Error: Something went wrong while fetching the recipes.",
+		});
+	}
+
+	res.status(statusCode.OK).send({
+		recipes: recipes.data,
 	});
 }
 
@@ -120,7 +138,7 @@ export async function saveARecipe(req: express.Request, res: express.Response) {
 	});
 }
 
-export async function getSavedRecipesByUser(
+export async function getSavedRecipesIdByUser(
 	req: express.Request,
 	res: express.Response
 ) {
