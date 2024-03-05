@@ -1,55 +1,37 @@
-import {
-	ActionIcon,
-	Badge,
-	Card,
-	Group,
-	Image,
-	Text,
-	Tooltip,
-	rem,
-	useMantineTheme,
-} from "@mantine/core";
+import { Badge, Card, Group, Image, Text } from "@mantine/core";
 import {
 	IconBookmark,
+	IconBookmarkFilled,
 	IconClock,
 	IconHeart,
+	IconHeartFilled,
 	IconUsers,
 } from "@tabler/icons-react";
-import { useSelector } from "react-redux";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Recipe } from "../../pages/Home";
-import { selectIsAuthenticated } from "../../redux/authSlice";
+import LikeSaveButton from "../LikeSaveButton";
 import classes from "./RecipeCard.module.css";
 
 interface RecipeCardProps {
 	recipe: Recipe;
 	triggerModal: (type: "login" | "register") => void;
+	updateRecipeLikes: (recipeId: string, newLikesCount: number) => void;
 }
 
-function RecipeCard({ recipe, triggerModal }: RecipeCardProps) {
-	const isAuth = useSelector(selectIsAuthenticated);
-	const theme = useMantineTheme();
+function RecipeCard({
+	recipe,
+	triggerModal,
+	updateRecipeLikes,
+}: RecipeCardProps) {
+	const [isRecipeLiked, setIsRecipeLiked] = useState<boolean>(false);
+	const [isRecipeSaved, setIsRecipeSaved] = useState<boolean>(false);
 
-	function handleLike() {
-		if (!isAuth) {
-			triggerModal("login");
-		}
-	}
-
-	function handleSave() {
-		if (!isAuth) {
-			triggerModal("login");
-		}
-	}
+	const HeartIcon = isRecipeLiked ? IconHeartFilled : IconHeart;
+	const BookmarkIcon = isRecipeSaved ? IconBookmarkFilled : IconBookmark;
 
 	return (
-		<Card
-			// withBorder
-			padding="md"
-			radius="md"
-			shadow="xl"
-			className={classes.card}
-		>
+		<Card padding="md" radius="md" shadow="xl" className={classes.card}>
 			<Card.Section>
 				<Link to={`/recipe/${recipe._id}`} className={classes.imageContainer}>
 					<Image
@@ -94,32 +76,26 @@ function RecipeCard({ recipe, triggerModal }: RecipeCardProps) {
 						<Text fz="xs" c="dimmed">
 							{recipe.likes} people liked this
 						</Text>
-						<Group gap={0}>
-							<Tooltip label="Like" withArrow>
-								<ActionIcon onClick={handleLike} variant="subtle" color="gray">
-									<IconHeart
-										style={{ width: rem(20), height: rem(20) }}
-										color={theme.colors.red[6]}
-										stroke={1.5}
-									/>
-								</ActionIcon>
-							</Tooltip>
-							<Tooltip label="Save" withArrow>
-								<ActionIcon onClick={handleSave} variant="subtle" color="gray">
-									<IconBookmark
-										style={{ width: rem(20), height: rem(20) }}
-										color={theme.colors.yellow[6]}
-										stroke={1.5}
-									/>
-								</ActionIcon>
-							</Tooltip>
-							{/* <ActionIcon onClick={handleShare} variant="subtle" color="gray">
-								<IconShare
-									style={{ width: rem(20), height: rem(20) }}
-									color={theme.colors.blue[6]}
-									stroke={1.5}
-								/>
-							</ActionIcon>*/}
+						<Group gap={5}>
+							<LikeSaveButton
+								type="Like"
+								recipeId={recipe._id}
+								selected={isRecipeLiked}
+								setSelected={setIsRecipeLiked}
+								Icon={HeartIcon}
+								iconColor="red"
+								updateRecipeLikes={updateRecipeLikes}
+								triggerModal={triggerModal}
+							/>
+							<LikeSaveButton
+								type="Save"
+								recipeId={recipe._id}
+								selected={isRecipeSaved}
+								setSelected={setIsRecipeSaved}
+								Icon={BookmarkIcon}
+								updateRecipeLikes={updateRecipeLikes}
+								triggerModal={triggerModal}
+							/>
 						</Group>
 					</Group>
 				</Card.Section>
