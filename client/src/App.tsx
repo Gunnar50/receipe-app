@@ -11,9 +11,9 @@ import AuthenticationForm, {
 	AuthType,
 } from "./components/authentication/AuthForm";
 import Home from "./pages/Home";
-import LikedRecipes from "./pages/LikedRecipes";
 import NotFoundPage from "./pages/NotFound/NotFound";
 import RecipeDetail from "./pages/RecipeDetail";
+import SavedRecipes from "./pages/SavedRecipes";
 import {
 	selectIsAuthenticated,
 	selectUser,
@@ -84,7 +84,7 @@ function App() {
 						path="/recipe/:recipeId"
 						element={<RecipeDetail triggerModal={triggerModal} />}
 					/>
-					<Route path="/liked-recipes" element={<LikedRecipes />} />
+					<Route path="/saved-recipes" element={<SavedRecipes />} />
 					{/* <Route path="/create-recipe" /> */}
 					<Route path="*" element={<NotFoundPage />} />
 				</Routes>
