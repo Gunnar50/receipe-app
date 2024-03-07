@@ -8,14 +8,13 @@ import {
 	useMantineTheme,
 } from "@mantine/core";
 import {
+	IconBookmark,
 	IconChevronDown,
 	IconCirclePlus,
-	IconHeart,
 	IconList,
 	IconLogout,
 	IconMessage,
 	IconSettings,
-	IconStar,
 	IconUserFilled,
 } from "@tabler/icons-react";
 import cx from "clsx";
@@ -25,18 +24,7 @@ import { useNavigate } from "react-router-dom";
 import { selectIsAuthenticated, selectUser } from "../../redux/authSlice";
 import classes from "./HeaderTabs.module.css";
 
-const user = {
-	name: "Jane Spoonfighter",
-	email: "janspoon@fighter.dev",
-	image:
-		"https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-5.png",
-};
-
-interface HeaderMenu {
-	handleLogout: () => void;
-}
-
-function HeaderMenu({ handleLogout }: HeaderMenu) {
+function HeaderMenu({ handleLogout }: { handleLogout: () => void }) {
 	const theme = useMantineTheme();
 	const navigate = useNavigate();
 	const [userMenuOpened, setUserMenuOpened] = useState(false);
@@ -102,23 +90,11 @@ function HeaderMenu({ handleLogout }: HeaderMenu) {
 					My Recipes
 				</Menu.Item>
 				<Menu.Item
-					onClick={() => navigate("/liked-recipes")}
-					leftSection={
-						<IconHeart
-							style={{ width: rem(16), height: rem(16) }}
-							color={theme.colors.red[6]}
-							stroke={1.5}
-						/>
-					}
-				>
-					Liked Recipes
-				</Menu.Item>
-				<Menu.Item
 					onClick={() => navigate("/saved-recipes")}
 					leftSection={
-						<IconStar
+						<IconBookmark
 							style={{ width: rem(16), height: rem(16) }}
-							color={theme.colors.yellow[6]}
+							color={theme.colors.blue[6]}
 							stroke={1.5}
 						/>
 					}
@@ -130,7 +106,7 @@ function HeaderMenu({ handleLogout }: HeaderMenu) {
 					leftSection={
 						<IconMessage
 							style={{ width: rem(16), height: rem(16) }}
-							color={theme.colors.blue[6]}
+							color={theme.colors.yellow[6]}
 							stroke={1.5}
 						/>
 					}
