@@ -12,7 +12,7 @@ import AuthenticationForm, {
 } from "./components/authentication/AuthForm";
 import Home from "./pages/Home";
 import NotFoundPage from "./pages/NotFound/NotFound";
-import RecipeDetail from "./pages/RecipeDetail";
+import RecipeDetail from "./pages/RecipeDetails/RecipeDetail";
 import SavedRecipes from "./pages/SavedRecipes";
 import {
 	selectIsAuthenticated,
