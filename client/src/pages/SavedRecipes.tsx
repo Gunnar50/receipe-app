@@ -1,6 +1,6 @@
 import { Grid } from "@mantine/core";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import RecipeCard from "../components/Card/RecipeCard";
 import { selectIsAuthenticated, selectUser } from "../redux/authSlice";
 import API from "../utils/api";
@@ -10,7 +10,6 @@ function SavedRecipes() {
 	const [recipes, setRecipes] = useState<Recipe[]>([]);
 	const isAuth = useSelector(selectIsAuthenticated);
 	const user = useSelector(selectUser);
-	const dispatch = useDispatch();
 
 	useEffect(() => {
 		async function getUserLikedRecipes() {
