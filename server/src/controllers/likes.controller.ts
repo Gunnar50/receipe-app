@@ -1,5 +1,9 @@
 import express from "express";
-import { getLikedRecipes, getRecipeById } from "../models/recipe.model";
+import {
+	getLikedRecipes,
+	getRecipeById,
+	getSavedRecipes,
+} from "../models/recipe.model";
 import { getUserById } from "../models/user.model";
 import { HTTP_STATUS as statusCode } from "../utils/httpStatus";
 import { tryPromise } from "../utils/inlineHandlers";
@@ -73,24 +77,6 @@ export async function getLikedRecipesIdByUser(
 	});
 }
 
-export async function getLikedRecipesByUser(
-	req: express.Request,
-	res: express.Response
-) {
-	const { recipesIds } = req.body;
-
-	const recipes = await tryPromise(getLikedRecipes(recipesIds));
-	if (recipes.error) {
-		return res.status(statusCode.INTERNAL_SERVER_ERROR).send({
-			message: "Error: Something went wrong while fetching the recipes.",
-		});
-	}
-
-	res.status(statusCode.OK).send({
-		recipes: recipes.data,
-	});
-}
-
 export async function saveARecipe(req: express.Request, res: express.Response) {
 	const { userId } = req.params;
 	const { recipeId } = req.body;
@@ -153,5 +139,23 @@ export async function getSavedRecipesIdByUser(
 
 	res.status(statusCode.OK).send({
 		savedRecipes: user.data.savedRecipes,
+	});
+}
+
+export async function getSavedRecipesByUser(
+	req: express.Request,
+	res: express.Response
+) {
+	const { recipesIds } = req.body;
+
+	const recipes = await tryPromise(getSavedRecipes(recipesIds));
+	if (recipes.error) {
+		return res.status(statusCode.INTERNAL_SERVER_ERROR).send({
+			message: "Error: Something went wrong while fetching the recipes.",
+		});
+	}
+
+	res.status(statusCode.OK).send({
+		recipes: recipes.data,
 	});
 }
