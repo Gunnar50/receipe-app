@@ -1,7 +1,7 @@
 import express from "express";
 import {
-	getLikedRecipesByUser,
 	getLikedRecipesIdByUser,
+	getSavedRecipesByUser,
 	getSavedRecipesIdByUser,
 	likeARecipe,
 	saveARecipe,
@@ -56,10 +56,10 @@ router.get(
 );
 
 router.post(
-	"/liked-recipes/:userId",
+	"/saved-recipes/:userId",
 	isAuthenticated,
 	isOwner,
-	getLikedRecipesByUser
+	getSavedRecipesByUser
 );
 
 export default router;
