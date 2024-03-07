@@ -1,7 +1,0 @@
-.detailGrid {
-	max-width: 25rem;
-	margin: 0 auto;
-	@media (min-width: $mantine-breakpoint-sm) {
-		max-width: 100%;
-	}
-}
