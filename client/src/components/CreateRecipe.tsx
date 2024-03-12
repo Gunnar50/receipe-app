@@ -13,22 +13,22 @@ import {
 	TextInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { upperFirst, useToggle } from "@mantine/hooks";
-import axios from "axios";
 import { zodResolver } from "mantine-form-zod-resolver";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { selectIsAuthenticated, selectUser } from "../redux/authSlice";
 import { setContent } from "../redux/toastSlice";
 import API from "../utils/api";
-import { loginSchema, signupSchema } from "../utils/zod";
+import { handleError } from "../utils/handleError";
+import { createRecipeSchema } from "../utils/zod";
 
 function CreateRecipe() {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const [type, toggle] = useToggle(["login", "register"]);
-	const isAuthenticated = useSelector(selectIsAuthenticated);
+	const isAuth = useSelector(selectIsAuthenticated);
 	const user = useSelector(selectUser);
+	const [ingredientInput, setIngredientInput] = useState("");
 
 	const form = useForm({
 		initialValues: {
@@ -40,34 +40,15 @@ function CreateRecipe() {
 			image: "",
 		},
 
-		validate: zodResolver(loginSchema),
+		validate: zodResolver(createRecipeSchema),
 	});
-
-	function handleError(error: unknown) {
-		if (axios.isAxiosError(error)) {
-			const msg = Array.isArray(error.response?.data.message)
-				? error.response.data.message[0]
-				: error.response?.data.message;
-			dispatch(setContent({ text: msg || "An error occurred", type: "error" }));
-		} else {
-			console.log("Error:", error);
-			dispatch(setContent({ text: "Operation failed", type: "error" }));
-		}
-	}
 
 	async function handleCreate(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault();
 		form.validate();
 
 		try {
-			const response = await API.post(`/recipes/${user?.userId}`, {
-				title: form.values.title,
-				ingredients: form.values.ingredients,
-				descripiton: form.values.description,
-				serves: form.values.serves,
-				cookingTime: form.values.cookingTime,
-				image: form.values.image,
-			});
+			const response = await API.post(`/recipes/${user?.userId}`, form.values);
 			const { message, newRecipe } = response.data;
 
 			dispatch(
@@ -82,6 +63,23 @@ function CreateRecipe() {
 		}
 	}
 
+	const handleIngredientAdd = () => {
+		if (ingredientInput) {
+			form.setValues({
+				ingredients: [...form.values.ingredients, ingredientInput],
+			});
+
+			setIngredientInput("");
+		}
+	};
+
+	const handleIngredientRemove = (index) => {
+		setRecipe((prevRecipe) => ({
+			...prevRecipe,
+			ingredients: prevRecipe.ingredients.filter((_, i) => i !== index),
+		}));
+	};
+
 	return (
 		<Paper>
 			<Divider labelPosition="center" mb="lg" />
@@ -90,7 +88,8 @@ function CreateRecipe() {
 				<Stack>
 					<TextInput
 						required
-						placeholder="Title"
+						label="Title"
+						placeholder="My Amazing Recipe Title..."
 						value={form.values.title}
 						onChange={(event) =>
 							form.setFieldValue("title", event.currentTarget.value)
@@ -100,7 +99,8 @@ function CreateRecipe() {
 
 					<TextInput
 						required
-						placeholder="Description"
+						label="Description"
+						placeholder="This is where you describe your awesome recipe, and how to make it..."
 						value={form.values.description}
 						onChange={(event) =>
 							form.setFieldValue("description", event.currentTarget.value)
@@ -108,20 +108,23 @@ function CreateRecipe() {
 						error={form.errors.email && "Invalid email"}
 						radius="md"
 					/>
-
-					<TextInput
-						required
-						placeholder="Ingredients"
-						value={form.values.ingredients}
-						onChange={(event) =>
-							form.setFieldValue("ingredients", event.currentTarget.value)
-						}
-						error={
-							form.errors.password &&
-							"Password should include at least 6 characters"
-						}
-						radius="md"
-					/>
+					<Group>
+						<TextInput
+							required
+							placeholder="Ingredients"
+							value={form.values.ingredients}
+							onChange={(event) => setIngredientInput(event?.target.value)}
+							// onChange={(event) =>
+							// 	form.setFieldValue("ingredients", event.currentTarget.value)
+							// }
+							error={
+								form.errors.password &&
+								"Password should include at least 6 characters"
+							}
+							radius="md"
+						/>
+						<Button onClick={handleIngredientAdd}>Add</Button>
+					</Group>
 					<NumberInput
 						required
 						placeholder="Don't enter more than 20 and less than 10"
@@ -157,7 +160,7 @@ function CreateRecipe() {
 					<Button type="submit" radius="xl">
 						Create
 					</Button>
-					<Button radius="xl" color="red">
+					<Button radius="xl" color="red" onClick={() => form.reset()}>
 						Clear
 					</Button>
 				</Group>
