@@ -21,7 +21,6 @@ function MyRecipes() {
 				const response = await API.get(
 					`/recipes/get-user-recipes/${user?.userId}`
 				);
-				console.log(response.data);
 				setRecipes(response.data);
 			} catch (err) {
 				console.log(err);
