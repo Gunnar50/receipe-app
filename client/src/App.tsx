@@ -5,8 +5,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import CustomModal from "./components/Nav/CustomModal";
+import CreateRecipe from "./components/CreateRecipe";
+import CustomModal from "./components/CustomModal";
 import Nav from "./components/Nav/Nav";
+import ProtectedRoutes from "./components/ProtectedRoutes";
 import AuthenticationForm, {
 	AuthType,
 } from "./components/authentication/AuthForm";
@@ -85,9 +87,11 @@ function App() {
 						path="/recipe/:recipeId"
 						element={<RecipeDetail triggerModal={triggerModal} />}
 					/>
-					<Route path="/saved-recipes" element={<SavedRecipes />} />
-					<Route path="/my-recipes" element={<MyRecipes />} />
-					{/* <Route path="/create-recipe" /> */}
+					<Route element={<ProtectedRoutes triggerModal={triggerModal} />}>
+						<Route path="/saved-recipes" element={<SavedRecipes />} />
+						<Route path="/my-recipes" element={<MyRecipes />} />
+						<Route path="/create-recipe" element={<CreateRecipe />} />
+					</Route>
 					<Route path="*" element={<NotFoundPage />} />
 				</Routes>
 			</Container>
