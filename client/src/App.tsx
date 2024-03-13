@@ -11,6 +11,7 @@ import AuthenticationForm, {
 	AuthType,
 } from "./components/authentication/AuthForm";
 import Home from "./pages/Home";
+import MyRecipes from "./pages/MyRecipes";
 import NotFoundPage from "./pages/NotFound/NotFound";
 import RecipeDetail from "./pages/RecipeDetails/RecipeDetail";
 import SavedRecipes from "./pages/SavedRecipes";
@@ -85,6 +86,7 @@ function App() {
 						element={<RecipeDetail triggerModal={triggerModal} />}
 					/>
 					<Route path="/saved-recipes" element={<SavedRecipes />} />
+					<Route path="/my-recipes" element={<MyRecipes />} />
 					{/* <Route path="/create-recipe" /> */}
 					<Route path="*" element={<NotFoundPage />} />
 				</Routes>
