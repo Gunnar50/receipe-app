@@ -23,6 +23,15 @@ import API from "../utils/api";
 import { handleError } from "../utils/handleError";
 import { createRecipeSchema } from "../utils/zod";
 
+interface RecipeFormValues {
+	title: string;
+	ingredients: string[];
+	description: string;
+	serves: number;
+	cookingTime: number;
+	image: string;
+}
+
 function CreateRecipe() {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -30,7 +39,7 @@ function CreateRecipe() {
 	const user = useSelector(selectUser);
 	const [ingredientInput, setIngredientInput] = useState("");
 
-	const form = useForm({
+	const form = useForm<RecipeFormValues>({
 		initialValues: {
 			title: "",
 			ingredients: [],
@@ -73,11 +82,11 @@ function CreateRecipe() {
 		}
 	};
 
-	const handleIngredientRemove = (index) => {
-		setRecipe((prevRecipe) => ({
-			...prevRecipe,
-			ingredients: prevRecipe.ingredients.filter((_, i) => i !== index),
-		}));
+	const handleIngredientRemove = (index: number) => {
+		const updatedIngredients = form.values.ingredients.filter(
+			(_, i) => i !== index
+		);
+		form.setFieldValue("ingredients", updatedIngredients);
 	};
 
 	return (
@@ -108,15 +117,25 @@ function CreateRecipe() {
 						error={form.errors.email && "Invalid email"}
 						radius="md"
 					/>
+					{form.values.ingredients.map((ingredient, index) => (
+						<Group key={index}>
+							<Text>{ingredient}</Text>
+							<Button
+								color="red"
+								size="xs"
+								radius="xl"
+								onClick={() => handleIngredientRemove(index)}
+							>
+								X
+							</Button>
+						</Group>
+					))}
 					<Group>
 						<TextInput
 							required
+							value={ingredientInput}
 							placeholder="Ingredients"
-							value={form.values.ingredients}
 							onChange={(event) => setIngredientInput(event?.target.value)}
-							// onChange={(event) =>
-							// 	form.setFieldValue("ingredients", event.currentTarget.value)
-							// }
 							error={
 								form.errors.password &&
 								"Password should include at least 6 characters"
