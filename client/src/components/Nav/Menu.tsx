@@ -68,6 +68,7 @@ function HeaderMenu({ handleLogout }: { handleLogout: () => void }) {
 			</Menu.Target>
 			<Menu.Dropdown>
 				<Menu.Item
+					onClick={() => navigate("/create-recipe")}
 					leftSection={
 						<IconCirclePlus
 							style={{ width: rem(16), height: rem(16) }}
