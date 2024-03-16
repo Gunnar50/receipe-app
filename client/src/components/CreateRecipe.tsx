@@ -39,7 +39,7 @@ function CreateRecipe() {
 	const user = useSelector(selectUser);
 	const [ingredientInput, setIngredientInput] = useState("");
 
-	const form = useForm<RecipeFormValues>({
+	const form = useForm({
 		initialValues: {
 			title: "",
 			ingredients: [],
