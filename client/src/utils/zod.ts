@@ -16,8 +16,7 @@ export const signupSchema = loginSchema.extend({
 export const createRecipeSchema = z.object({
 	title: z.string().min(3, { message: "Title must be at least 3 characters" }),
 	ingredients: z
-		.string()
-		.array()
+		.array(z.string())
 		.nonempty({ message: "Ingredients must contain at least 1 ingredient" }),
 	description: z
 		.string()
