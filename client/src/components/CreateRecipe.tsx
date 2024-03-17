@@ -1,9 +1,11 @@
 import {
+	ActionIcon,
 	Anchor,
 	Button,
 	Container,
 	Divider,
 	Group,
+	List,
 	NumberInput,
 	Paper,
 	PaperProps,
@@ -11,8 +13,10 @@ import {
 	Stack,
 	Text,
 	TextInput,
+	Textarea,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { IconTrash } from "@tabler/icons-react";
 import { zodResolver } from "mantine-form-zod-resolver";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,15 +26,6 @@ import { setContent } from "../redux/toastSlice";
 import API from "../utils/api";
 import { handleError } from "../utils/handleError";
 import { createRecipeSchema } from "../utils/zod";
-
-interface RecipeFormValues {
-	title: string;
-	ingredients: string[];
-	description: string;
-	serves: number;
-	cookingTime: number;
-	image: string;
-}
 
 function CreateRecipe() {
 	const navigate = useNavigate();
@@ -42,7 +37,7 @@ function CreateRecipe() {
 	const form = useForm({
 		initialValues: {
 			title: "",
-			ingredients: [],
+			ingredients: [""],
 			description: "",
 			serves: 0,
 			cookingTime: 0,
@@ -106,7 +101,7 @@ function CreateRecipe() {
 						radius="md"
 					/>
 
-					<TextInput
+					<Textarea
 						required
 						label="Description"
 						placeholder="This is where you describe your awesome recipe, and how to make it..."
@@ -117,45 +112,43 @@ function CreateRecipe() {
 						error={form.errors.email && "Invalid email"}
 						radius="md"
 					/>
-					{form.values.ingredients.map((ingredient, index) => (
-						<Group key={index}>
-							<Text>{ingredient}</Text>
-							<Button
-								color="red"
-								size="xs"
-								radius="xl"
-								onClick={() => handleIngredientRemove(index)}
-							>
-								X
-							</Button>
-						</Group>
-					))}
-					<Group>
+					{form.values.ingredients.map(
+						(ingredient, index) =>
+							ingredient && (
+								<Group key={index}>
+									<Text>{ingredient}</Text>
+									<ActionIcon
+										color="red"
+										onClick={() => handleIngredientRemove(index)}
+									>
+										<IconTrash size="1rem" />
+									</ActionIcon>
+								</Group>
+							)
+					)}
+					<Group align="end">
 						<TextInput
 							required
 							value={ingredientInput}
+							label="Ingredients"
 							placeholder="Ingredients"
 							onChange={(event) => setIngredientInput(event?.target.value)}
-							error={
-								form.errors.password &&
-								"Password should include at least 6 characters"
-							}
 							radius="md"
+							style={{ flex: 1 }}
 						/>
 						<Button onClick={handleIngredientAdd}>Add</Button>
 					</Group>
 					<NumberInput
 						required
+						label="Serves"
 						placeholder="Don't enter more than 20 and less than 10"
 						value={form.values.serves}
-						onChange={(event) =>
-							form.setFieldValue("serves", event.currentTarget.value)
-						}
-						error={form.errors.email && "Invalid email"}
+						onChange={(event) => form.setFieldValue("serves", event)}
 						radius="md"
 					/>
 					<NumberInput
 						required
+						label="Cooking Time (minutes)"
 						value={form.values.cookingTime}
 						onChange={(event) =>
 							form.setFieldValue("cookingTime", event.currentTarget.value)
@@ -165,6 +158,7 @@ function CreateRecipe() {
 					/>
 					<TextInput
 						required
+						label="Image URL (thumbnail)"
 						placeholder="Image"
 						value={form.values.image}
 						onChange={(event) =>
