@@ -26,4 +26,5 @@ export const createRecipeSchema = z.object({
 		.number()
 		.gt(0, { message: "Cooking time must be greater than 1 minute." }),
 	image: z.string().min(1, { message: "Image must be at least 1 character." }),
+	category: z.string().min(1, { message: "Must have a category." }),
 });
