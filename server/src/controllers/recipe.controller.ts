@@ -18,7 +18,15 @@ export async function createRecipe(
 	res: express.Response
 ) {
 	const { userId: owner } = req.params;
-	const { title, ingredients, description, image, cookingTime } = req.body;
+	const {
+		title,
+		ingredients,
+		description,
+		image,
+		cookingTime,
+		serves,
+		category,
+	} = req.body;
 
 	const validation = recipeSchema.safeParse({
 		title,
@@ -26,9 +34,12 @@ export async function createRecipe(
 		description,
 		image,
 		cookingTime,
+		serves,
+		category,
 	});
 	if (!validation.success) {
 		const errorResult = validation as { error: ZodError };
+		console.log(errorResult.error);
 
 		return res.status(statusCode.BAD_REQUEST).send({
 			message: errorResult.error.issues.map((err) => err.message),
@@ -44,9 +55,14 @@ export async function createRecipe(
 			description,
 			image,
 			cookingTime,
+			serves,
+			category,
 			owner,
 		})
 	);
+
+	console.log(ingredients);
+	console.log(newRecipe.error);
 
 	if (newRecipe.error) {
 		return res.status(statusCode.INTERNAL_SERVER_ERROR).send({
