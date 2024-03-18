@@ -27,6 +27,15 @@ import API from "../utils/api";
 import { handleError } from "../utils/handleError";
 import { createRecipeSchema } from "../utils/zod";
 
+interface RecipeValues {
+	title: string;
+	ingredients: string[];
+	description: string;
+	serves: number;
+	cookingTime: number;
+	image: string;
+}
+
 function CreateRecipe() {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -42,17 +51,18 @@ function CreateRecipe() {
 			serves: 0,
 			cookingTime: 0,
 			image: "",
+			category: "",
 		},
 
 		validate: zodResolver(createRecipeSchema),
 	});
 
-	async function handleCreate(event: React.FormEvent<HTMLFormElement>) {
-		event.preventDefault();
+	async function handleCreate(values: RecipeValues) {
 		form.validate();
+		console.log(values);
 
 		try {
-			const response = await API.post(`/recipes/${user?.userId}`, form.values);
+			const response = await API.post(`/recipes/${user?.userId}`, values);
 			const { message, newRecipe } = response.data;
 
 			dispatch(
@@ -88,29 +98,22 @@ function CreateRecipe() {
 		<Paper>
 			<Divider labelPosition="center" mb="lg" />
 
-			<form onSubmit={(e) => handleCreate(e)}>
+			<form onSubmit={form.onSubmit((values) => handleCreate(values))}>
 				<Stack>
 					<TextInput
-						required
+						withAsterisk
 						label="Title"
 						placeholder="My Amazing Recipe Title..."
-						value={form.values.title}
-						onChange={(event) =>
-							form.setFieldValue("title", event.currentTarget.value)
-						}
 						radius="md"
+						{...form.getInputProps("title")}
 					/>
 
 					<Textarea
-						required
+						withAsterisk
 						label="Description"
 						placeholder="This is where you describe your awesome recipe, and how to make it..."
-						value={form.values.description}
-						onChange={(event) =>
-							form.setFieldValue("description", event.currentTarget.value)
-						}
-						error={form.errors.email && "Invalid email"}
 						radius="md"
+						{...form.getInputProps("description")}
 					/>
 					{form.values.ingredients.map(
 						(ingredient, index) =>
@@ -128,7 +131,6 @@ function CreateRecipe() {
 					)}
 					<Group align="end">
 						<TextInput
-							required
 							value={ingredientInput}
 							label="Ingredients"
 							placeholder="Ingredients"
@@ -139,33 +141,31 @@ function CreateRecipe() {
 						<Button onClick={handleIngredientAdd}>Add</Button>
 					</Group>
 					<NumberInput
-						required
+						withAsterisk
 						label="Serves"
-						placeholder="Don't enter more than 20 and less than 10"
-						value={form.values.serves}
-						onChange={(event) => form.setFieldValue("serves", event)}
+						placeholder="Serves"
 						radius="md"
+						{...form.getInputProps("serves")}
 					/>
 					<NumberInput
-						required
+						withAsterisk
 						label="Cooking Time (minutes)"
-						value={form.values.cookingTime}
-						onChange={(event) =>
-							form.setFieldValue("cookingTime", event.currentTarget.value)
-						}
-						error={form.errors.email && "Invalid email"}
 						radius="md"
+						{...form.getInputProps("cookingTime")}
 					/>
 					<TextInput
-						required
+						withAsterisk
 						label="Image URL (thumbnail)"
 						placeholder="Image"
-						value={form.values.image}
-						onChange={(event) =>
-							form.setFieldValue("image", event.currentTarget.value)
-						}
-						error={form.errors.email && "Invalid email"}
 						radius="md"
+						{...form.getInputProps("image")}
+					/>
+					<TextInput
+						withAsterisk
+						label="Category"
+						placeholder="Category"
+						radius="md"
+						{...form.getInputProps("category")}
 					/>
 				</Stack>
 
