@@ -46,7 +46,7 @@ function CreateRecipe() {
 	const form = useForm({
 		initialValues: {
 			title: "",
-			ingredients: [""],
+			ingredients: [""], // add a default empty string to the array to ensure it is a array of strings
 			description: "",
 			serves: 0,
 			cookingTime: 0,
@@ -59,7 +59,8 @@ function CreateRecipe() {
 
 	async function handleCreate(values: RecipeValues) {
 		form.validate();
-		console.log(values);
+		// removes the first default empty string from the ingredients
+		form.setValues({ ingredients: [...form.values.ingredients.splice(0, 1)] });
 
 		try {
 			const response = await API.post(`/recipes/${user?.userId}`, values);
@@ -71,7 +72,7 @@ function CreateRecipe() {
 					type: "success",
 				})
 			);
-			navigate("/");
+			navigate(`/recipe/${newRecipe._id}`);
 		} catch (error: unknown) {
 			handleError(error);
 		}
