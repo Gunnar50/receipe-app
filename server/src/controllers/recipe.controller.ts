@@ -61,9 +61,6 @@ export async function createRecipe(
 		})
 	);
 
-	console.log(ingredients);
-	console.log(newRecipe.error);
-
 	if (newRecipe.error) {
 		return res.status(statusCode.INTERNAL_SERVER_ERROR).send({
 			message: "Something went wrong creating a recipe. Please try again.",
