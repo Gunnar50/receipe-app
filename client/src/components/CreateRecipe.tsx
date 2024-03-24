@@ -58,6 +58,11 @@ function CreateRecipe() {
 	});
 
 	async function handleCreate(values: RecipeValues) {
+		if (!isAuth || !user) {
+			navigate("/");
+			return;
+		}
+
 		form.validate();
 		// removes the first default empty string from the ingredients
 		form.setValues({ ingredients: [...form.values.ingredients.splice(0, 1)] });
