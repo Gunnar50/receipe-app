@@ -6,9 +6,8 @@ The project is a Recipe App, designed to allow users to contribute their own rec
 
 - frontend:
 
-  - create recipe page
-  - my recipes page
-  - my saved recipes page
+  - able to edit a recipe
+  - delete recipe
   - add account settings page
 
 - add share button
