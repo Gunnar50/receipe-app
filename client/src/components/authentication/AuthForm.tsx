@@ -10,12 +10,12 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { upperFirst } from "@mantine/hooks";
-import axios from "axios";
 import { zodResolver } from "mantine-form-zod-resolver";
 import { useDispatch } from "react-redux";
 import { login } from "../../redux/authSlice";
 import { setContent } from "../../redux/toastSlice";
 import API from "../../utils/api";
+import { handleError } from "../../utils/handleError";
 import { loginSchema, signupSchema } from "../../utils/zod";
 
 interface AuthProps {
@@ -39,18 +39,6 @@ function AuthenticationForm({ closeModal, type, toggleType }: AuthProps) {
 		validate: zodResolver(type === "register" ? signupSchema : loginSchema),
 	});
 
-	function handleError(error: unknown) {
-		if (axios.isAxiosError(error)) {
-			const msg = Array.isArray(error.response?.data.message)
-				? error.response.data.message[0]
-				: error.response?.data.message;
-			dispatch(setContent({ text: msg || "An error occurred", type: "error" }));
-		} else {
-			console.log("Error:", error);
-			dispatch(setContent({ text: "Operation failed", type: "error" }));
-		}
-	}
-
 	async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault();
 		form.validate();
@@ -69,7 +57,6 @@ function AuthenticationForm({ closeModal, type, toggleType }: AuthProps) {
 					type: "success",
 				})
 			);
-			// navigate("/");
 			closeModal();
 		} catch (error: unknown) {
 			handleError(error);
