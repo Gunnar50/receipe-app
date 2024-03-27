@@ -21,6 +21,7 @@ import { handleError } from "../utils/handleError";
 import { recipeSchema } from "../utils/zod";
 
 interface RecipeValues {
+	id?: string;
 	title: string;
 	ingredients: string[];
 	description: string;
@@ -82,6 +83,33 @@ function RecipeForm({ recipe, type }: RecipeFormProps) {
 		}
 	}
 
+	async function handleUpdateRecipe(values: RecipeValues) {
+		if (!isAuth || !user || !recipe) {
+			navigate("/");
+			return;
+		}
+
+		form.validate();
+
+		try {
+			const response = await API.put(
+				`/recipes/${user?.userId}/${recipe.id}`,
+				values
+			);
+			const { message, updatedRecipe } = response.data;
+
+			dispatch(
+				setContent({
+					text: message,
+					type: "success",
+				})
+			);
+			navigate(`/recipe/${updatedRecipe._id}`);
+		} catch (error: unknown) {
+			handleError(error);
+		}
+	}
+
 	const handleIngredientAdd = () => {
 		if (ingredientInput) {
 			form.setValues({
@@ -100,7 +128,13 @@ function RecipeForm({ recipe, type }: RecipeFormProps) {
 	};
 
 	return (
-		<form onSubmit={form.onSubmit((values) => handleCreateRecipe(values))}>
+		<form
+			onSubmit={form.onSubmit((values) =>
+				type === "create"
+					? handleCreateRecipe(values)
+					: handleUpdateRecipe(values)
+			)}
+		>
 			<Stack>
 				<TextInput
 					withAsterisk
@@ -173,11 +207,15 @@ function RecipeForm({ recipe, type }: RecipeFormProps) {
 
 			<Group mt="xl">
 				<Button type="submit" radius="xl">
-					Create
+					{type === "create" ? "Create" : "Update"}
 				</Button>
-				<Button radius="xl" color="red" onClick={() => form.reset()}>
-					Clear
-				</Button>
+				{type === "create" ? (
+					<Button radius="xl" color="red" onClick={() => form.reset()}>
+						Clear
+					</Button>
+				) : (
+					<></>
+				)}
 			</Group>
 		</form>
 	);
