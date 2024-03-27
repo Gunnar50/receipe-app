@@ -13,7 +13,7 @@ export const signupSchema = loginSchema.extend({
 		.min(3, { message: "Username must be at least 3 characters" }),
 });
 
-export const createRecipeSchema = z.object({
+export const recipeSchema = z.object({
 	title: z.string().min(3, { message: "Title must be at least 3 characters" }),
 	ingredients: z
 		.array(z.string())
