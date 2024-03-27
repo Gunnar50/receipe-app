@@ -18,7 +18,7 @@ import { selectIsAuthenticated, selectUser } from "../redux/authSlice";
 import { setContent } from "../redux/toastSlice";
 import API from "../utils/api";
 import { handleError } from "../utils/handleError";
-import { createRecipeSchema } from "../utils/zod";
+import { recipeSchema } from "../utils/zod";
 
 interface RecipeValues {
 	title: string;
@@ -27,13 +27,15 @@ interface RecipeValues {
 	serves: number;
 	cookingTime: number;
 	image: string;
+	category: string;
 }
 
 interface RecipeFormProps {
-	recipe: RecipeValues;
+	recipe?: RecipeValues;
+	type: "create" | "edit";
 }
 
-function RecipeForm({ recipe }: RecipeFormProps) {
+function RecipeForm({ recipe, type }: RecipeFormProps) {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const isAuth = useSelector(selectIsAuthenticated);
@@ -42,19 +44,19 @@ function RecipeForm({ recipe }: RecipeFormProps) {
 
 	const form = useForm({
 		initialValues: {
-			title: "",
-			ingredients: [""], // add a default empty string to the array to ensure it is a array of strings
-			description: "",
-			serves: 0,
-			cookingTime: 0,
-			image: "",
-			category: "",
+			title: recipe?.title || "",
+			ingredients: recipe?.ingredients || [""], // add a default empty string to the array to ensure it is a array of strings
+			description: recipe?.description || "",
+			serves: recipe?.serves || 0,
+			cookingTime: recipe?.cookingTime || 0,
+			image: recipe?.image || "",
+			category: recipe?.category || "",
 		},
 
-		validate: zodResolver(createRecipeSchema),
+		validate: zodResolver(recipeSchema),
 	});
 
-	async function handleCreate(values: RecipeValues) {
+	async function handleCreateRecipe(values: RecipeValues) {
 		if (!isAuth || !user) {
 			navigate("/");
 			return;
@@ -62,7 +64,7 @@ function RecipeForm({ recipe }: RecipeFormProps) {
 
 		form.validate();
 		// removes the first default empty string from the ingredients
-		form.setValues({ ingredients: [...form.values.ingredients.splice(0, 1)] });
+		form.setValues({ ingredients: [...values.ingredients.splice(0, 1)] });
 
 		try {
 			const response = await API.post(`/recipes/${user?.userId}`, values);
@@ -98,7 +100,7 @@ function RecipeForm({ recipe }: RecipeFormProps) {
 	};
 
 	return (
-		<form onSubmit={form.onSubmit((values) => handleCreate(values))}>
+		<form onSubmit={form.onSubmit((values) => handleCreateRecipe(values))}>
 			<Stack>
 				<TextInput
 					withAsterisk
