@@ -151,13 +151,23 @@ export async function updateRecipe(
 	res: express.Response
 ) {
 	const { recipeId } = req.params;
-	const { title, ingredients, description, image, cookingTime } = req.body;
+	const {
+		title,
+		ingredients,
+		description,
+		image,
+		cookingTime,
+		serves,
+		category,
+	} = req.body;
 
 	const validation = recipeSchema.safeParse({
 		title,
 		ingredients,
 		description,
 		image,
+		serves,
+		category,
 		cookingTime,
 	});
 	if (!validation.success) {
@@ -178,6 +188,8 @@ export async function updateRecipe(
 				description,
 				image,
 				cookingTime,
+				serves,
+				category,
 			},
 			{ new: true, runValidators: true }
 		)
