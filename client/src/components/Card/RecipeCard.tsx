@@ -11,6 +11,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Recipe } from "../../pages/Home";
 import LikeSaveButton from "../LikeSaveButton";
+import CardMenu from "./CardMenu";
 import classes from "./RecipeCard.module.css";
 
 interface RecipeCardProps {
@@ -62,13 +63,12 @@ function RecipeCard({
 					<Text fw={400}>{recipe.cookingTime} minutes</Text>
 				</Group>
 
-				<Group mt="md">
-					<div>
-						<Text fz="xs" c="dimmed">
-							Created by:{" "}
-							{recipe.owner?.username ? recipe.owner.username : "Unknown"}
-						</Text>
-					</div>
+				<Group mt="md" justify="space-between">
+					<Text fz="xs" c="dimmed">
+						Created by:{" "}
+						{recipe.owner?.username ? recipe.owner.username : "Unknown"}
+					</Text>
+					{!updateRecipeLikes && <CardMenu recipe={recipe} />}
 				</Group>
 
 				{updateRecipeLikes && triggerModal && (
