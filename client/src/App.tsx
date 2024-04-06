@@ -1,29 +1,29 @@
+import CreateRecipe from "@components/CreateRecipe";
+import CustomModal from "@components/CustomModal";
+import Nav from "@components/Nav/Nav";
+import ProtectedRoutes from "@components/ProtectedRoutes";
+import AuthenticationForm, {
+	AuthType,
+} from "@components/authentication/AuthForm";
 import { Container } from "@mantine/core";
 import { useDisclosure, useToggle } from "@mantine/hooks";
+import Home from "@pages/Home";
+import MyRecipes from "@pages/MyRecipes";
+import NotFoundPage from "@pages/NotFound/NotFound";
+import RecipeDetail from "@pages/RecipeDetails/RecipeDetail";
+import SavedRecipes from "@pages/SavedRecipes";
+import {
+	selectIsAuthenticated,
+	selectUser,
+	validateSession,
+} from "@redux/authSlice";
+import { selectContent, setContent } from "@redux/toastSlice";
+import API from "@utils/api";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import CreateRecipe from "./components/CreateRecipe";
-import CustomModal from "./components/CustomModal";
-import Nav from "./components/Nav/Nav";
-import ProtectedRoutes from "./components/ProtectedRoutes";
-import AuthenticationForm, {
-	AuthType,
-} from "./components/authentication/AuthForm";
-import Home from "./pages/Home";
-import MyRecipes from "./pages/MyRecipes";
-import NotFoundPage from "./pages/NotFound/NotFound";
-import RecipeDetail from "./pages/RecipeDetails/RecipeDetail";
-import SavedRecipes from "./pages/SavedRecipes";
-import {
-	selectIsAuthenticated,
-	selectUser,
-	validateSession,
-} from "./redux/authSlice";
-import { selectContent, setContent } from "./redux/toastSlice";
-import API from "./utils/api";
 
 function App() {
 	const dispatch = useDispatch();
@@ -91,6 +91,7 @@ function App() {
 						<Route path="/saved-recipes" element={<SavedRecipes />} />
 						<Route path="/my-recipes" element={<MyRecipes />} />
 						<Route path="/create-recipe" element={<CreateRecipe />} />
+						<Route path="/recipe/edit/:recipeId" element={<CreateRecipe />} />
 					</Route>
 					<Route path="*" element={<NotFoundPage />} />
 				</Routes>
