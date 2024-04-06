@@ -6,9 +6,6 @@ import { Recipe } from "../../pages/Home";
 function CardMenu({ recipe }: { recipe: Recipe }) {
 	const navigate = useNavigate();
 
-	function handleEdit() {
-		navigate(`/recipe/edit/${recipe._id}`);
-	}
 	return (
 		<Menu shadow="md" position="bottom-end">
 			<Menu.Target>
@@ -21,12 +18,8 @@ function CardMenu({ recipe }: { recipe: Recipe }) {
 
 			<Menu.Dropdown>
 				<Menu.Item
-					leftSection={
-						<IconEdit
-							style={{ width: rem(14), height: rem(14) }}
-							onClick={handleEdit}
-						/>
-					}
+					onClick={() => navigate(`/recipe/edit/${recipe._id}`)}
+					leftSection={<IconEdit style={{ width: rem(14), height: rem(14) }} />}
 				>
 					Edit
 				</Menu.Item>
