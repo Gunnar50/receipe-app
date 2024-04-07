@@ -10,13 +10,13 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { upperFirst } from "@mantine/hooks";
+import { login } from "@redux/authSlice";
+import { setContent } from "@redux/toastSlice";
+import API from "@utils/api";
+import { handleError } from "@utils/handleError";
+import { loginSchema, signupSchema } from "@utils/zod";
 import { zodResolver } from "mantine-form-zod-resolver";
 import { useDispatch } from "react-redux";
-import { login } from "../../redux/authSlice";
-import { setContent } from "../../redux/toastSlice";
-import API from "../../utils/api";
-import { handleError } from "../../utils/handleError";
-import { loginSchema, signupSchema } from "../../utils/zod";
 
 interface AuthProps {
 	type: "login" | "register";
