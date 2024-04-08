@@ -1,4 +1,6 @@
+import LikeSaveButton from "@components/LikeSaveButton";
 import { Badge, Card, Group, Image, Text } from "@mantine/core";
+import { Recipe } from "@pages/Home";
 import {
 	IconBookmark,
 	IconBookmarkFilled,
@@ -9,8 +11,6 @@ import {
 } from "@tabler/icons-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Recipe } from "../../pages/Home";
-import LikeSaveButton from "../LikeSaveButton";
 import CardMenu from "./CardMenu";
 import classes from "./RecipeCard.module.css";
 
