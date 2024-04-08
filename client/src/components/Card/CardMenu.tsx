@@ -1,7 +1,7 @@
 import { ActionIcon, Menu, Tooltip, rem } from "@mantine/core";
+import { Recipe } from "@pages/Home";
 import { IconDots, IconEdit, IconTrash } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
-import { Recipe } from "../../pages/Home";
 
 function CardMenu({ recipe }: { recipe: Recipe }) {
 	const navigate = useNavigate();
