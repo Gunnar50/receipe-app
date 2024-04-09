@@ -1,9 +1,9 @@
+import RecipeCard from "@components/Card/RecipeCard";
 import { Grid } from "@mantine/core";
+import { selectIsAuthenticated, selectUser } from "@redux/authSlice";
+import API from "@utils/api";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import RecipeCard from "../components/Card/RecipeCard";
-import { selectIsAuthenticated, selectUser } from "../redux/authSlice";
-import API from "../utils/api";
 import { Recipe } from "./Home";
 
 function SavedRecipes() {
