@@ -1,7 +1,7 @@
+import RecipeCard from "@components/Card/RecipeCard";
 import { Grid } from "@mantine/core";
+import API from "@utils/api";
 import { useEffect, useState } from "react";
-import RecipeCard from "../components/Card/RecipeCard";
-import API from "../utils/api";
 
 export interface Recipe {
 	_id: string;
