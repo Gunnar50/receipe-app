@@ -1,11 +1,11 @@
 import { ActionIcon, Tooltip, rem } from "@mantine/core";
+import { selectIsAuthenticated, selectUser } from "@redux/authSlice";
+import { setContent } from "@redux/toastSlice";
 import { TablerIconsProps } from "@tabler/icons-react";
+import API from "@utils/api";
+import { handleError } from "@utils/handleError";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { selectIsAuthenticated, selectUser } from "../redux/authSlice";
-import { setContent } from "../redux/toastSlice";
-import API from "../utils/api";
-import { handleError } from "../utils/handleError";
 
 function LikeSaveButton({
 	type,
