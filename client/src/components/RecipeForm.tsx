@@ -9,16 +9,16 @@ import {
 	Textarea,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { selectIsAuthenticated, selectUser } from "@redux/authSlice";
+import { setContent } from "@redux/toastSlice";
 import { IconTrash } from "@tabler/icons-react";
+import API from "@utils/api";
+import { handleError } from "@utils/handleError";
+import { recipeSchema } from "@utils/zod";
 import { zodResolver } from "mantine-form-zod-resolver";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { selectIsAuthenticated, selectUser } from "../redux/authSlice";
-import { setContent } from "../redux/toastSlice";
-import API from "../utils/api";
-import { handleError } from "../utils/handleError";
-import { recipeSchema } from "../utils/zod";
 
 interface RecipeValues {
 	id?: string;
