@@ -1,7 +1,7 @@
+import { selectIsAuthenticated } from "@redux/authSlice";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
-import { selectIsAuthenticated } from "../redux/authSlice";
 
 function ProtectedRoutes({
 	triggerModal,
