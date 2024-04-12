@@ -1,5 +1,5 @@
 import { Paper, Title } from "@mantine/core";
-import RecipeForm from "./RecipeForm";
+import RecipeForm from "../components/RecipeForm";
 
 function CreateRecipe() {
 	return (
