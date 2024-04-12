@@ -6,9 +6,10 @@ The project is a Recipe App, designed to allow users to contribute their own rec
 
 - frontend:
 
-  - able to edit a recipe
-  - delete recipe
+  - deleting recipe - check if the logged in user owns that recipe
   - add account settings page
+  - change recipe id to use slugs instead
+  - implement search bar
 
 - add share button
 - turn into a docker container
