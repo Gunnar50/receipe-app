@@ -7,13 +7,13 @@ import {
 	rem,
 	useMantineTheme,
 } from "@mantine/core";
+import { selectUser } from "@redux/authSlice";
 import {
 	IconBookmark,
 	IconChevronDown,
 	IconCirclePlus,
 	IconList,
 	IconLogout,
-	IconMessage,
 	IconSettings,
 	IconUserFilled,
 } from "@tabler/icons-react";
@@ -21,7 +21,6 @@ import cx from "clsx";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { selectIsAuthenticated, selectUser } from "../../redux/authSlice";
 import classes from "./HeaderTabs.module.css";
 
 function HeaderMenu({ handleLogout }: { handleLogout: () => void }) {
@@ -102,7 +101,7 @@ function HeaderMenu({ handleLogout }: { handleLogout: () => void }) {
 				>
 					Saved Recipes
 				</Menu.Item>
-				<Menu.Item
+				{/* <Menu.Item
 					onClick={() => navigate("/comments")}
 					leftSection={
 						<IconMessage
@@ -113,7 +112,7 @@ function HeaderMenu({ handleLogout }: { handleLogout: () => void }) {
 					}
 				>
 					My comments
-				</Menu.Item>
+				</Menu.Item> */}
 
 				<Menu.Label>Settings</Menu.Label>
 				<Menu.Item

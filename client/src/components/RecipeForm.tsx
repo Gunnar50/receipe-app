@@ -21,7 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 interface RecipeValues {
-	id?: string;
+	_id?: string;
 	title: string;
 	ingredients: string[];
 	description: string;
@@ -93,7 +93,7 @@ function RecipeForm({ recipe, type }: RecipeFormProps) {
 
 		try {
 			const response = await API.put(
-				`/recipes/${user?.userId}/${recipe.id}`,
+				`/recipes/${user?.userId}/${recipe._id}`,
 				values
 			);
 			const { message, updatedRecipe } = response.data;

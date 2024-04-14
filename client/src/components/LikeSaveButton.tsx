@@ -27,8 +27,8 @@ function LikeSaveButton({
 	triggerModal: (type: "login" | "register") => void;
 }) {
 	const isAuth = useSelector(selectIsAuthenticated);
-	const dispatch = useDispatch();
 	const user = useSelector(selectUser);
+	const dispatch = useDispatch();
 
 	async function handleButtons() {
 		if (!isAuth) {
