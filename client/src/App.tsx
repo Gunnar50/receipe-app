@@ -1,4 +1,3 @@
-import CreateRecipe from "@components/CreateRecipe";
 import CustomModal from "@components/CustomModal";
 import Nav from "@components/Nav/Nav";
 import ProtectedRoutes from "@components/ProtectedRoutes";
@@ -7,6 +6,8 @@ import AuthenticationForm, {
 } from "@components/authentication/AuthForm";
 import { Container } from "@mantine/core";
 import { useDisclosure, useToggle } from "@mantine/hooks";
+import CreateRecipe from "@pages/CreateRecipe";
+import EditRecipe from "@pages/EditRecipe";
 import Home from "@pages/Home";
 import MyRecipes from "@pages/MyRecipes";
 import NotFoundPage from "@pages/NotFound/NotFound";
@@ -91,7 +92,7 @@ function App() {
 						<Route path="/saved-recipes" element={<SavedRecipes />} />
 						<Route path="/my-recipes" element={<MyRecipes />} />
 						<Route path="/create-recipe" element={<CreateRecipe />} />
-						<Route path="/recipe/edit/:recipeId" element={<CreateRecipe />} />
+						<Route path="/recipe/edit/:recipeId" element={<EditRecipe />} />
 					</Route>
 					<Route path="*" element={<NotFoundPage />} />
 				</Routes>
